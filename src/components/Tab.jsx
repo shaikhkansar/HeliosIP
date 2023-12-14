@@ -9,6 +9,7 @@ import "./App.css";
 import Dynamics365Entity from "./Dynamics365Entity";
 import AddEmployee from "./AddEmployee";
  
+//wasi will work on this
 class Tab extends React.Component {
  
   constructor(props) {
