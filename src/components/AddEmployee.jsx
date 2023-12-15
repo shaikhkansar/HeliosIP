@@ -167,8 +167,8 @@ function AddEmployee() {
 </div>
 
       </form>
-<Dynamics365Entity/> 
-<div style={{marginTop:"90px"}}><MeetingSummary/></div>
+{/* <Dynamics365Entity/>  */}
+{/* <div style={{marginTop:"90px"}}><MeetingSummary/></div> */}
 
 
     </div>

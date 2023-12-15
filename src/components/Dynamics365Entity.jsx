@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { UserPlus, Save, Edit, Link2, Trash2 } from "react-feather";
-import { Link } from "react-router-dom";
 import EditEmployee from "./EditEntity";
 import DeleteEmployee from "./DeleteEmployee";
 
@@ -252,10 +251,10 @@ const Dynamics365Entity = () => {
             onChange={handleSearchChange}
             style={{ marginLeft: "160px", marginTop: "20px"}}
           />
-          <Link
+          {/* <Link
             to={`/edit-employee/${users.EmployeesID}`}
             style={{ width: "450px" }}
-          >
+          > */}
             {/* <button
               class="btn btn-success d-grid gap-2 col-6 mx-auto"
               type="button"
@@ -267,7 +266,7 @@ const Dynamics365Entity = () => {
                 style={{ marginLeft: "-3px" }}
               />
             </button> */}
-          </Link>
+          {/* </Link> */}
         </div>
         <div style={{ width: "300px", marginLeft: "155px", maxHeight: "200px", overflowY: "auto" }}>
           <table

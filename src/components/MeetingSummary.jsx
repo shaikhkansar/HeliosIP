@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
 import AddEmployee from "./AddEmployee";
+import Dynamics365Entity from "./Dynamics365Entity";
 
 const MeetingSummary = () => {
   const [meetings, setMeetings] = useState(null);
@@ -23,7 +24,7 @@ const MeetingSummary = () => {
         },
         body: JSON.stringify({
           meetingid:
-            "AAMkADBjMzUwZTk2LTNjZjQtNDg4OC05NGUzLWMzMjcwZGQzZDRlZgBGAAAAAABOL2KklS2zQ7eN7Yf7kB1dBwB6HKPOO2MUSrLAZ9rx2s0hAAAAAAENAAB6HKPOO2MUSrLAZ9rx2s0hAAEGhxJZAAA=",
+            "AAMkADBjMzUwZTk2LTNjZjQtNDg4OC05NGUzLWMzMjcwZGQzZDRlZgBGAAAAAABOL2KklS2zQ7eN7Yf7kB1dBwB6HKPOO2MUSrLAZ9rx2s0hAAAAAAENAAB6HKPOO2MUSrLAZ9rx2s0hAAEGhxJbAAA=",
         }),
       }
     )
@@ -49,12 +50,16 @@ const MeetingSummary = () => {
   }, []);
 
   return (
-    <div className="App">
+    <div className="App" style={{ marginTop: "120px" }}>
       {error ? (
-        <p style={{marginLeft:"420px", color:"red", fontSize:"16px"}}>This meeting is not compatible for this App !!!</p>
+        <p style={{ marginLeft: "420px", color: "red", fontSize: "16px" }}>
+          This meeting is not compatible for this App !!!
+        </p>
       ) : meetings ? (
         <div>
-          <table style={{marginTop:"-80px", marginLeft:"350px"}}>
+          <AddEmployee />
+          <Dynamics365Entity />
+          <table style={{ marginTop: "20px", marginLeft: "350px" }}>
             <tbody>
               <tr style={{ display: "none" }}>
                 <td>Subject</td>
@@ -74,7 +79,6 @@ const MeetingSummary = () => {
               </tr>
             </tbody>
           </table>
-          {/* <AddEmployee /> */}
         </div>
       ) : (
         <p>Loading ...</p>
