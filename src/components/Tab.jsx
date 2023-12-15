@@ -11,6 +11,7 @@ import AddEmployee from "./AddEmployee";
  
 class Tab extends React.Component {
  
+  //This is added by wase kamil
   constructor(props) {
  
     super(props);
