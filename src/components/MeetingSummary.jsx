@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect,useContext  } from "react";
 import AddEmployee from "./AddEmployee";
 import Dynamics365Entity from "./Dynamics365Entity";
 
-const MeetingSummary = () => {
+const MeetingSummary = ({ meetingId }) => {
   const [meetings, setMeetings] = useState(null);
   const [error, setError] = useState(true);
 
-  // const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   navigate("/meeting-summary");
-  // }, []);
+  
 
   useEffect(() => {
+    if (!meetingId) {
+      setError("Meeting ID is not provided");
+      return;
+    }
     fetch(
       "https://prod-27.centralindia.logic.azure.com:443/workflows/84d9c85cd2fd43509af9186e4d93133d/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ubO2vmGZz2ZBkE6BDMHpOyr3aTI-CRmsktVAR9xV9bE",
       {
@@ -23,8 +22,8 @@ const MeetingSummary = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          meetingid:
-            "AAMkADBjMzUwZTk2LTNjZjQtNDg4OC05NGUzLWMzMjcwZGQzZDRlZgBGAAAAAABOL2KklS2zQ7eN7Yf7kB1dBwB6HKPOO2MUSrLAZ9rx2s0hAAAAAAENAAB6HKPOO2MUSrLAZ9rx2s0hAAEGhxJbAAA=",
+          meetingid: meetingId,
+            // "AAMkADBjMzUwZTk2LTNjZjQtNDg4OC05NGUzLWMzMjcwZGQzZDRlZgBGAAAAAABOL2KklS2zQ7eN7Yf7kB1dBwB6HKPOO2MUSrLAZ9rx2s0hAAAAAAENAAB6HKPOO2MUSrLAZ9rx2s0hAAEGhxJbAAA=",
         }),
       }
     )
@@ -47,10 +46,10 @@ const MeetingSummary = () => {
         setError(error.message);
         console.error("Error fetching meeting details", error);
       });
-  }, []);
+  }, [meetingId]);
 
   return (
-    <div className="App" style={{ marginTop: "120px" }}>
+    <div className="App" style={{ marginTop: "-55px", marginRight:"60px" }}>
       {error ? (
         <p style={{ marginLeft: "420px", color: "red", fontSize: "16px" }}>
           This meeting is not compatible for this App !!!

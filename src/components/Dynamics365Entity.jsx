@@ -129,7 +129,7 @@ const Dynamics365Entity = () => {
   const handleDelete = async (userId) => {
     try {
       const response = await fetch(
-        `https://prod-13.centralindia.logic.azure.com:443/workflows/2b563d21a1594bf0bda46f4d6f339d3f/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=xdJobsYJ5kRA1HUtxevqV_PpSIOpW8TNPWHwS3qDqyY`,
+        `https://prod-22.centralindia.logic.azure.com:443/workflows/a1307a92ea314a5caadec200102b181c/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=InDCrp4yrcmNPrORMRByPiYC3ZSnmnmSNObDsMLzvdM`,
         {
           method: "POST",
           headers: {
@@ -137,7 +137,7 @@ const Dynamics365Entity = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            EmployeesID: userId,
+            EmployeeID: userId,
           }),
         }
       );
@@ -249,7 +249,7 @@ const Dynamics365Entity = () => {
             placeholder="Search"
             value={searchQuery}
             onChange={handleSearchChange}
-            style={{ marginLeft: "160px", marginTop: "20px"}}
+            style={{ marginLeft: "155px", marginTop: "20px", width:"335px"}}
           />
           {/* <Link
             to={`/edit-employee/${users.EmployeesID}`}
@@ -268,20 +268,20 @@ const Dynamics365Entity = () => {
             </button> */}
           {/* </Link> */}
         </div>
-        <div style={{ width: "300px", marginLeft: "155px", maxHeight: "200px", overflowY: "auto" }}>
+        <div style={{ width: "335px", marginLeft: "155px", maxHeight: "200px", overflowY: "auto", marginTop:"10px"}}>
           <table
             className="table table-hover"
             style={{ width: "520px", margin: "15 auto", backgroundColor:"white", borderRadius:"5px"}}
           >
-            <thead>
-              <tr marginLeft="20px">
-                <th>Emp.id</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Item Link</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
+             <thead>
+    <tr style={{marginLeft: '20px', position: 'sticky', top: 0, backgroundColor: '#f2f2f2'}}>
+      <th>Emp.id</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Item Link</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
             <tbody>
               {filteredUsers.map((user) => (
                 <tr key={user.EmployeesID}>
@@ -350,6 +350,7 @@ const Dynamics365Entity = () => {
                           cursor: "pointer",
                           marginTop: "-2px",
                           paddingTop: "4px",
+                          marginRight:"50px"
                         }}
                       />
                     </div>
@@ -362,6 +363,7 @@ const Dynamics365Entity = () => {
                           onClick={() => handleSave(user.EmployeesID)}
                           cursor="pointer"
                           color="#5b5fc7"
+                          marginRight="50px"
                         />
                       ) : (
                         <Edit
@@ -369,6 +371,7 @@ const Dynamics365Entity = () => {
                           cursor="pointer"
                           color="#5b5fc7"
                           onClick={() => handleEdit(user)}
+                          style={{ marginRight: "25px" }}
                         />
                       )}
 
@@ -376,7 +379,7 @@ const Dynamics365Entity = () => {
                         size="20px"
                         cursor="pointer"
                         color="Red"
-                        style={{ marginLeft: "15px" }}
+                        style={{ marginRight: "25px" }}
                         onClick={() => handleDelete(user.EmployeesID)}
                       />
                     </div>

@@ -120,7 +120,7 @@ function AddEmployee() {
       </button> */}
  
       <form onSubmit={handleSubmit} style={{marginLeft:"350px", marginTop:"20px"}}>
-      <div className="row mb-2">
+      <div className="row mb-2" style={{marginLeft:"55px"}}>
   <div className="col">
     <input
       type="text"
