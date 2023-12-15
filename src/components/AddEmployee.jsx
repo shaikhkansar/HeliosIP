@@ -108,7 +108,6 @@ function AddEmployee() {
   }, [isPopup]);
   return (
     <div className="main-container">
-      <MeetingSummary/>
       {isPopup && (
         <div class="modal-dialog modal-dialog-centered" style={{marginLeft:"500",marginTop:"10px"}}>
           <h6 className="text-success g-3">User added successfully!</h6>
@@ -168,7 +167,10 @@ function AddEmployee() {
 </div>
 
       </form>
-<Dynamics365Entity/>      
+<Dynamics365Entity/> 
+<div style={{marginTop:"90px"}}><MeetingSummary/></div>
+
+
     </div>
   );
 }

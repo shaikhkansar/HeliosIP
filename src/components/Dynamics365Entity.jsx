@@ -15,7 +15,7 @@ const Dynamics365Entity = () => {
   const [editedUsers, setEditedUsers] = useState({});
 
   const [formData, setFormData] = useState({
-    EmployeesID: "",
+    EmployeeID: "",
     FirstName: "",
     LastName: "",
   });
@@ -81,16 +81,81 @@ const Dynamics365Entity = () => {
     }));
   };
 
-  const handleSave = (userId) => {
-    // Implement your save logic here
-    // You can send the editedUsers[userId] data to your server or update it in your state
-    setEditedUsers((prevEditedUsers) => ({
-      ...prevEditedUsers,
-      [userId]: {
-        ...prevEditedUsers[userId],
-        isEditing: false,
-      },
-    }));
+  const handleSave = async (userId) => {
+    try {
+      // Assuming editedUsers is the state holding the edited user data
+      const editedUser = editedUsers[userId];
+  
+      const response = await fetch(
+        "https://prod-21.centralindia.logic.azure.com:443/workflows/1290c468508e4c41b259ad86daac3852/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=KBx5zqzkElvYM9vL2rzoZ0BQBsUYE1Q8zYjej-GiFSE",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            EmployeesID: editedUser.EmployeesID,
+            FirstName: editedUser.FirstName,
+            LastName: editedUser.LastName,
+            // Add other properties if needed
+          }),
+        }
+      );
+  
+      if (response.ok) {
+        // Update the local state or perform any additional actions if needed
+        setEditedUsers((prevEditedUsers) => {
+          const updatedState = {
+            ...prevEditedUsers,
+            [userId]: {
+              ...prevEditedUsers[userId],
+              isEditing: false,
+            },
+          };
+          console.log("Updated State:", updatedState);
+          return updatedState;
+        });
+        console.log("Edit request successful!");
+      } else {
+        // Handle API error
+        console.log("API error:", response);
+      }
+    } catch (error) {
+      // Handle network error
+      console.error("Network error:", error);
+    }
+  };
+
+  const handleDelete = async (userId) => {
+    try {
+      const response = await fetch(
+        `https://prod-13.centralindia.logic.azure.com:443/workflows/2b563d21a1594bf0bda46f4d6f339d3f/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=xdJobsYJ5kRA1HUtxevqV_PpSIOpW8TNPWHwS3qDqyY`,
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            EmployeesID: userId,
+          }),
+        }
+      );
+  
+      if (response.ok) {
+        // Remove the deleted user from the state
+        const updatedUsers = users.filter((user) => user.EmployeesID !== userId);
+        setUsers(updatedUsers);
+        console.log("Delete request successful!");
+      } else {
+        // Handle API error
+        console.log("Delete request failed. Server response:", response);
+      }
+    } catch (error) {
+      // Handle network error
+      console.error("Network error:", error);
+    }
   };
 
   useEffect(() => {
@@ -185,7 +250,7 @@ const Dynamics365Entity = () => {
             placeholder="Search"
             value={searchQuery}
             onChange={handleSearchChange}
-            style={{ marginLeft: "160px", marginTop: "20px" }}
+            style={{ marginLeft: "160px", marginTop: "20px"}}
           />
           <Link
             to={`/edit-employee/${users.EmployeesID}`}
@@ -204,10 +269,10 @@ const Dynamics365Entity = () => {
             </button> */}
           </Link>
         </div>
-        <div style={{ width: "400px", marginLeft: "160px" }}>
+        <div style={{ width: "300px", marginLeft: "155px", maxHeight: "200px", overflowY: "auto" }}>
           <table
             className="table table-hover"
-            style={{ width: "500px", margin: "15 auto", backgroundColor:"white", borderRadius:"5px"}}
+            style={{ width: "520px", margin: "15 auto", backgroundColor:"white", borderRadius:"5px"}}
           >
             <thead>
               <tr marginLeft="20px">
@@ -313,6 +378,7 @@ const Dynamics365Entity = () => {
                         cursor="pointer"
                         color="Red"
                         style={{ marginLeft: "15px" }}
+                        onClick={() => handleDelete(user.EmployeesID)}
                       />
                     </div>
                   </td>
