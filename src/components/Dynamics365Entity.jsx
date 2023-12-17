@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { UserPlus, Save, Edit, Link2, Trash2 } from "react-feather";
+import { UserPlus, Save, Edit, Link2, Trash2, XSquare } from "react-feather";
 import EditEmployee from "./EditEntity";
 import DeleteEmployee from "./DeleteEmployee";
 
@@ -84,7 +84,7 @@ const Dynamics365Entity = () => {
     try {
       // Assuming editedUsers is the state holding the edited user data
       const editedUser = editedUsers[userId];
-  
+
       const response = await fetch(
         "https://prod-21.centralindia.logic.azure.com:443/workflows/1290c468508e4c41b259ad86daac3852/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=KBx5zqzkElvYM9vL2rzoZ0BQBsUYE1Q8zYjej-GiFSE",
         {
@@ -101,7 +101,7 @@ const Dynamics365Entity = () => {
           }),
         }
       );
-  
+
       if (response.ok) {
         // Update the local state or perform any additional actions if needed
         setEditedUsers((prevEditedUsers) => {
@@ -126,6 +126,18 @@ const Dynamics365Entity = () => {
     }
   };
 
+  const handleCancel = (employeesID) => {
+    // Assuming editedUsers is a state variable and setEditedUsers is a function to update it
+    setEditedUsers((prevEditedUsers) => {
+      const updatedUsers = { ...prevEditedUsers };
+
+      // Revert any changes made during editing by resetting the edited user state
+      updatedUsers[employeesID] = { isEditing: false, data: null };
+
+      return updatedUsers;
+    });
+  };
+
   const handleDelete = async (userId) => {
     try {
       const response = await fetch(
@@ -141,10 +153,12 @@ const Dynamics365Entity = () => {
           }),
         }
       );
-  
+
       if (response.ok) {
         // Remove the deleted user from the state
-        const updatedUsers = users.filter((user) => user.EmployeesID !== userId);
+        const updatedUsers = users.filter(
+          (user) => user.EmployeesID !== userId
+        );
         setUsers(updatedUsers);
         console.log("Delete request successful!");
       } else {
@@ -222,11 +236,16 @@ const Dynamics365Entity = () => {
   }, []);
 
 */
-  const filteredUsers = users.filter((user) => {
+  
+
+const filteredUsers = users.filter((user) => {
+    
     return `${user.EmployeesID} ${user.FirstName} ${user.LastName} ${user.ItemLink}`
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
+      
   });
+  
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -249,13 +268,13 @@ const Dynamics365Entity = () => {
             placeholder="Search"
             value={searchQuery}
             onChange={handleSearchChange}
-            style={{ marginLeft: "155px", marginTop: "20px", width:"335px"}}
+            style={{ marginLeft: "155px", marginTop: "20px", width: "335px" }}
           />
           {/* <Link
             to={`/edit-employee/${users.EmployeesID}`}
             style={{ width: "450px" }}
           > */}
-            {/* <button
+          {/* <button
               class="btn btn-success d-grid gap-2 col-6 mx-auto"
               type="button"
             >
@@ -268,20 +287,40 @@ const Dynamics365Entity = () => {
             </button> */}
           {/* </Link> */}
         </div>
-        <div style={{ width: "335px", marginLeft: "155px", maxHeight: "200px", overflowY: "auto", marginTop:"10px"}}>
+        <div
+          style={{
+            width: "335px",
+            marginLeft: "155px",
+            maxHeight: "200px",
+            overflowY: "auto",
+            marginTop: "10px",
+          }}
+        >
           <table
             className="table table-hover"
-            style={{ width: "520px", margin: "15 auto", backgroundColor:"white", borderRadius:"5px"}}
+            style={{
+              width: "520px",
+              margin: "15 auto",
+              backgroundColor: "white",
+              borderRadius: "5px",
+            }}
           >
-             <thead>
-    <tr style={{marginLeft: '20px', position: 'sticky', top: 0, backgroundColor: '#f2f2f2'}}>
-      <th>Emp.id</th>
-      <th>First Name</th>
-      <th>Last Name</th>
-      <th>Item Link</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
+            <thead>
+              <tr
+                style={{
+                  marginLeft: "20px",
+                  position: "sticky",
+                  top: 0,
+                  backgroundColor: "#f2f2f2",
+                }}
+              >
+                <th>Emp.id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Item Link</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
             <tbody>
               {filteredUsers.map((user) => (
                 <tr key={user.EmployeesID}>
@@ -350,7 +389,7 @@ const Dynamics365Entity = () => {
                           cursor: "pointer",
                           marginTop: "-2px",
                           paddingTop: "4px",
-                          marginRight:"50px"
+                          marginRight: "50px",
                         }}
                       />
                     </div>
@@ -358,30 +397,66 @@ const Dynamics365Entity = () => {
                   <td>
                     <div style={{ display: "flex", justifyContent: "center" }}>
                       {editedUsers[user.EmployeesID]?.isEditing ? (
-                        <Save
-                          size="20px"
-                          onClick={() => handleSave(user.EmployeesID)}
-                          cursor="pointer"
-                          color="#5b5fc7"
-                          marginRight="50px"
-                        />
+                        <>
+                          <div
+                            className=""
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="Save"
+                          >
+                            <Save
+                              size="20px"
+                              onClick={() => handleSave(user.EmployeesID)}
+                              cursor="pointer"
+                              color="#5b5fc7"
+                              style={{ marginRight: "10px" }}
+                            />
+                          </div>
+                          <span
+                            className=""
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="Cancel"
+                          >
+                            <XSquare
+                              size="20px"
+                              onClick={() => handleCancel(user.EmployeesID)}
+                              cursor="pointer"
+                              color="red"
+                              style={{ marginRight: "10px" }}
+                            />
+                          </span>
+                        </>
                       ) : (
-                        <Edit
+                        <span
+                          className=""
+                          data-bs-toggle="tooltip"
+                          data-bs-placement="top"
+                          title="Edit"
+                        >
+                          <Edit
+                            size="20px"
+                            cursor="pointer"
+                            color="#5b5fc7"
+                            onClick={() => handleEdit(user)}
+                            style={{ marginRight: "25px" }}
+                          />
+                        </span>
+                      )}
+                      <span
+                        className=""
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        title="Delete"
+                      >
+                        <Trash2
                           size="20px"
                           cursor="pointer"
-                          color="#5b5fc7"
-                          onClick={() => handleEdit(user)}
+                          color="Red"
                           style={{ marginRight: "25px" }}
+                          onClick={() => handleDelete(user.EmployeesID)}
                         />
-                      )}
-
-                      <Trash2
-                        size="20px"
-                        cursor="pointer"
-                        color="Red"
-                        style={{ marginRight: "25px" }}
-                        onClick={() => handleDelete(user.EmployeesID)}
-                      />
+                      </span>
                     </div>
                   </td>
                 </tr>
