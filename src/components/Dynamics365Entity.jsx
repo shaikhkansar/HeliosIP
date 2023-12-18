@@ -1,88 +1,49 @@
 import React, { useState, useEffect } from "react";
-import { UserPlus, Save, Edit, Link2, Trash2, XSquare } from "react-feather";
-import EditEmployee from "./EditEntity";
-import DeleteEmployee from "./DeleteEmployee";
+import { Edit, Link2 } from "react-feather";
+import EditEntity from "./EditEntity";
+import DeleteEntity from "./DeleteEntity";
+import AddEmployee from "./AddEmployee";
 
 const Dynamics365Entity = () => {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [deleteSuccess, setDeleteSuccess] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
   const [users, setUsers] = useState([]);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [data, setData] = useState([]);
   const [editedUsers, setEditedUsers] = useState({});
-
   const [formData, setFormData] = useState({
-    EmployeeID: "",
+    EmployeesID: "",
     FirstName: "",
     LastName: "",
   });
-
-  const handleIdChange = (e) => {
-    setFormData({
-      ...formData,
-      EmployeesID: e.target.value,
-    });
-  };
-
-  const handleFirstNameChange = (e) => {
-    setFormData({
-      ...formData,
-      FirstName: e.target.value,
-    });
-  };
-
-  const handleLastNameChange = (e) => {
-    setFormData({
-      ...formData,
-      LastName: e.target.value,
-    });
-  };
-
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
-  const handleAdd = () => {
-    const newUser = {
-      EmployeesID: formData.EmployeesID,
-      FirstName: formData.FirstName,
-      LastName: formData.LastName,
-      ItemLink: formData.ItemLink,
-    };
-    setUsers([...users, newUser]);
-    setFormData({
-      EmployeesID: "",
-      FirstName: "",
-      LastName: "",
-      ItemLink: "",
-    });
-  };
-  const handleEdit = (user) => {
-    setEditedUsers((prevEditedUsers) => ({
-      ...prevEditedUsers,
-      [user.EmployeesID]: {
-        ...user,
-        isEditing: true,
-      },
-    }));
-  };
 
   const handleInputChange = (event, userId, field) => {
     const value = event.target.value;
     setEditedUsers((prevEditedUsers) => ({
       ...prevEditedUsers,
-      [userId]: {
-        ...prevEditedUsers[userId],
-        [field]: value,
-      },
+      [userId]: { ...prevEditedUsers[userId], [field]: value },
+    }));
+  };
+
+  const handleAdd = () => {
+    const newUser = { ...formData, ItemLink: formData.ItemLink || "" };
+    setUsers([...users, newUser]);
+    setFormData({ EmployeesID: "", FirstName: "", LastName: "", ItemLink: "" });
+  };
+
+  const handleEdit = (user) => {
+    setEditedUsers((prevEditedUsers) => ({
+      ...prevEditedUsers,
+      [user.EmployeesID]: { ...user, isEditing: true },
     }));
   };
 
   const handleSave = async (userId) => {
     try {
-      // Assuming editedUsers is the state holding the edited user data
       const editedUser = editedUsers[userId];
 
       const response = await fetch(
@@ -103,18 +64,17 @@ const Dynamics365Entity = () => {
       );
 
       if (response.ok) {
-        // Update the local state or perform any additional actions if needed
-        setEditedUsers((prevEditedUsers) => {
-          const updatedState = {
-            ...prevEditedUsers,
-            [userId]: {
-              ...prevEditedUsers[userId],
-              isEditing: false,
-            },
-          };
-          console.log("Updated State:", updatedState);
-          return updatedState;
-        });
+        setSaveSuccess(true); // Set saveSuccess to true after successful save
+        setTimeout(() => setSaveSuccess(false), 2000); // Automatically hide the message after 3000 milliseconds (3 seconds)
+
+        setEditedUsers((prevEditedUsers) => ({
+          ...prevEditedUsers,
+          [userId]: {
+            ...prevEditedUsers[userId],
+            isEditing: false,
+          },
+        }));
+
         console.log("Edit request successful!");
       } else {
         // Handle API error
@@ -125,17 +85,11 @@ const Dynamics365Entity = () => {
       console.error("Network error:", error);
     }
   };
-
   const handleCancel = (employeesID) => {
-    // Assuming editedUsers is a state variable and setEditedUsers is a function to update it
-    setEditedUsers((prevEditedUsers) => {
-      const updatedUsers = { ...prevEditedUsers };
-
-      // Revert any changes made during editing by resetting the edited user state
-      updatedUsers[employeesID] = { isEditing: false, data: null };
-
-      return updatedUsers;
-    });
+    setEditedUsers((prevEditedUsers) => ({
+      ...prevEditedUsers,
+      [employeesID]: { isEditing: false, data: null },
+    }));
   };
 
   const handleDelete = async (userId) => {
@@ -155,18 +109,17 @@ const Dynamics365Entity = () => {
       );
 
       if (response.ok) {
-        // Remove the deleted user from the state
         const updatedUsers = users.filter(
           (user) => user.EmployeesID !== userId
         );
         setUsers(updatedUsers);
+        setDeleteSuccess(true); // Set deleteSuccess to true after successful deletion
+        setTimeout(() => setDeleteSuccess(false), 2000); // Automatically hide the message after 3000 milliseconds (3 seconds)
         console.log("Delete request successful!");
       } else {
-        // Handle API error
         console.log("Delete request failed. Server response:", response);
       }
     } catch (error) {
-      // Handle network error
       console.error("Network error:", error);
     }
   };
@@ -189,63 +142,12 @@ const Dynamics365Entity = () => {
       );
   }, []);
 
-  /*
-  fetch("https://reqres.in/api/reister",{
-  method: "POST",
-  headers : {
-    Accept:"application/json",
-    "Content-Type" : "application/json",
-  },
-  body : JSON.stringify({
-    "meetingId": "eve.holt@reres.in"
-  }),
-  })
-  .then(( response) => response.json())
-  .then((responseData) => {
-    console.log(JSON.stringify(responseData));
-
-  })
-*/
-
-  /*alert("here");
-  useEffect(() => {
-    fetch(
-      "https://prod-27.centralindia.logic.azure.com:443/workflows/84d9c85cd2fd43509af9186e4d93133d/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ubO2vmGZz2ZBkE6BDMHpOyr3aTI-CRmsktVAR9xV9bE",{
-      method: "POST",
-      headers : {
-        Accept:"application/json",
-        "Content-Type" : "application/json",
-      },
-      body : JSON.stringify({
-        "meetingId": "AAMkADBjMzUwZTk2LTNjZjQtNDg4OC05NGUzLWMzMjcwZGQzZDRlZgBGAAAAAABOL2KklS2zQ7eN7Yf7kB1dBwB6HKPOO2MUSrLAZ9rx2s0hAAAAAAENAAB6HKPOO2MUSrLAZ9rx2s0hAAEAjk4qAAA="
-      }),
-      })
-      .then((res) => res.json())
-      .then(
-        (data) => {
-          setIsLoaded(true);
-          console.log(data);
-          
-          //setUsers(data);
-        },
-        (error) => {
-          setIsLoaded(true);
-          setError(error);
-        }
-      );
-  }, []);
-
-*/
-  
-
-const filteredUsers = users.filter((user) => {
-    
-    return `${user.EmployeesID} ${user.FirstName} ${user.LastName} ${user.ItemLink}`
+  const filteredUsers = users.filter((user) =>
+    [user.EmployeesID, user.FirstName, user.LastName, user.ItemLink]
+      .join(" ")
       .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-      
-  });
-  
+      .includes(searchQuery.toLowerCase())
+  );
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -253,218 +155,108 @@ const filteredUsers = users.filter((user) => {
     return <div></div>;
   } else {
     return (
-      <div style={{ marginLeft: "190px", marginTop: "-20px" }}>
-        {/* <Link
-          to={`/add-employee`}
-          class="btn btn-success"
-          style={{ marginRight: "10px" }}
-        >
-          Home
-        </Link> */}
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Search"
-            value={searchQuery}
-            onChange={handleSearchChange}
-            style={{ marginLeft: "155px", marginTop: "20px", width: "335px" }}
-          />
-          {/* <Link
-            to={`/edit-employee/${users.EmployeesID}`}
-            style={{ width: "450px" }}
-          > */}
-          {/* <button
-              class="btn btn-success d-grid gap-2 col-6 mx-auto"
-              type="button"
-            >
-              <UserPlus
-                size="30px"
-                onClick={handleAdd}
-                cursor="pointer"
-                style={{ marginLeft: "-3px" }}
+      <>
+        <AddEmployee deleteSuccess={deleteSuccess} saveSuccess={saveSuccess} />
+        <div className="search-container">
+          <div className="search-input">
+            <div className="handle-search">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
-            </button> */}
-          {/* </Link> */}
-        </div>
-        <div
-          style={{
-            width: "335px",
-            marginLeft: "155px",
-            maxHeight: "200px",
-            overflowY: "auto",
-            marginTop: "10px",
-          }}
-        >
-          <table
-            className="table table-hover"
-            style={{
-              width: "520px",
-              margin: "15 auto",
-              backgroundColor: "white",
-              borderRadius: "5px",
-            }}
-          >
-            <thead>
-              <tr
-                style={{
-                  marginLeft: "20px",
-                  position: "sticky",
-                  top: 0,
-                  backgroundColor: "#f2f2f2",
-                }}
-              >
-                <th>Emp.id</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Item Link</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredUsers.map((user) => (
-                <tr key={user.EmployeesID}>
-                  <td>
-                    {editedUsers[user.EmployeesID]?.isEditing ? (
-                      <input
-                        class="form-control"
-                        type="text"
-                        value={editedUsers[user.EmployeesID]?.EmployeesID}
-                        onChange={(event) =>
-                          handleInputChange(
-                            event,
-                            user.EmployeesID,
-                            "EmployeesID"
-                          )
-                        }
-                        style={{ width: "80px" }}
-                      />
-                    ) : (
-                      user.EmployeesID
-                    )}
-                  </td>
-                  <td>
-                    {editedUsers[user.EmployeesID]?.isEditing ? (
-                      <input
-                        class="form-control"
-                        type="text"
-                        value={editedUsers[user.EmployeesID]?.FirstName}
-                        onChange={(event) =>
-                          handleInputChange(
-                            event,
-                            user.EmployeesID,
-                            "FirstName"
-                          )
-                        }
-                        style={{ width: "80px" }}
-                      />
-                    ) : (
-                      user.FirstName
-                    )}
-                  </td>
-                  <td>
-                    {editedUsers[user.EmployeesID]?.isEditing ? (
-                      <input
-                        class="form-control"
-                        type="text"
-                        value={editedUsers[user.EmployeesID]?.LastName}
-                        onChange={(event) =>
-                          handleInputChange(event, user.EmployeesID, "LastName")
-                        }
-                        style={{ width: "80px" }}
-                      />
-                    ) : (
-                      user.LastName
-                    )}
-                  </td>
-                  <td>
-                    <div style={{ display: "flex", justifyContent: "center" }}>
-                      <Link2
-                        size="22px"
-                        color="#5b5fc7"
-                        onClick={() =>
-                          window.open(`${user.ItemLink}`, "_blank")
-                        }
-                        style={{
-                          cursor: "pointer",
-                          marginTop: "-2px",
-                          paddingTop: "4px",
-                          marginRight: "50px",
-                        }}
-                      />
-                    </div>
-                  </td>
-                  <td>
-                    <div style={{ display: "flex", justifyContent: "center" }}>
-                      {editedUsers[user.EmployeesID]?.isEditing ? (
-                        <>
-                          <div
-                            className=""
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="top"
-                            title="Save"
-                          >
-                            <Save
-                              size="20px"
-                              onClick={() => handleSave(user.EmployeesID)}
-                              cursor="pointer"
-                              color="#5b5fc7"
-                              style={{ marginRight: "10px" }}
-                            />
-                          </div>
-                          <span
-                            className=""
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="top"
-                            title="Cancel"
-                          >
-                            <XSquare
-                              size="20px"
-                              onClick={() => handleCancel(user.EmployeesID)}
-                              cursor="pointer"
-                              color="red"
-                              style={{ marginRight: "10px" }}
-                            />
-                          </span>
-                        </>
-                      ) : (
-                        <span
-                          className=""
-                          data-bs-toggle="tooltip"
-                          data-bs-placement="top"
-                          title="Edit"
-                        >
-                          <Edit
-                            size="20px"
-                            cursor="pointer"
-                            color="#5b5fc7"
-                            onClick={() => handleEdit(user)}
-                            style={{ marginRight: "25px" }}
-                          />
-                        </span>
-                      )}
-                      <span
-                        className=""
-                        data-bs-toggle="tooltip"
-                        data-bs-placement="top"
-                        title="Delete"
-                      >
-                        <Trash2
-                          size="20px"
-                          cursor="pointer"
-                          color="Red"
-                          style={{ marginRight: "25px" }}
-                          onClick={() => handleDelete(user.EmployeesID)}
-                        />
-                      </span>
-                    </div>
-                  </td>
+            </div>
+          </div>
+          <div className="results-container">
+            <table className="table table-hover table-container">
+              <thead>
+                <tr className="sticky-header">
+                  <th>Emp.id</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Item Link</th>
+                  <th>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {filteredUsers.map((user) => (
+                  <tr key={user.EmployeesID}>
+                    {["EmployeesID", "FirstName", "LastName"].map((field) => (
+                      <td key={field}>
+                        {editedUsers[user.EmployeesID]?.isEditing ? (
+                          <input
+                            placeholder={
+                              field === "EmployeesID" ? "Emp-id" : field
+                            }
+                            className="form-control edit-input"
+                            type="text"
+                            value={editedUsers[user.EmployeesID]?.[field]}
+                            onChange={(event) =>
+                              handleInputChange(event, user.EmployeesID, field)
+                            }
+                            style={{
+                              marginLeft: "-2px",
+                            }}
+                          />
+                        ) : (
+                          user[field]
+                        )}
+                      </td>
+                    ))}
+                    <td>
+                      <div className="link2-container">
+                        <Link2
+                          size="22px"
+                          color="#5b5fc7"
+                          onClick={() =>
+                            window.open(`${user.ItemLink}`, "_blank")
+                          }
+                        />
+                      </div>
+                    </td>
+                    <td>
+                      <div className="edit-icons-container">
+                        {editedUsers[user.EmployeesID]?.isEditing ? (
+                          <EditEntity
+                            user={user}
+                            handleSave={handleSave}
+                            handleCancel={handleCancel}
+                            handleInputChange={handleInputChange}
+                            editedUsers={editedUsers}
+                          />
+                        ) : (
+                          <>
+                            <span
+                              className=""
+                              data-bs-toggle="tooltip"
+                              data-bs-placement="top"
+                              title="Edit"
+                            >
+                              <Edit
+                                size="20px"
+                                cursor="pointer"
+                                color="#5b5fc7"
+                                onClick={() => handleEdit(user)}
+                                className="edit-icon"
+                              />
+                            </span>
+                            <DeleteEntity
+                              user={user}
+                              handleDelete={handleDelete}
+                            />
+                          </>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 };

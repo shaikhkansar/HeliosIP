@@ -27,3 +27,75 @@ body {
 .main-container{
   margin-left: -70px;
 }
+
+/* Dynamic365Entity.css */
+
+.search-container {
+  margin-left: 190px;
+  margin-top: -20px;
+}
+
+.search-input {
+  margin-left: 155px;
+  margin-top: 30px;
+  width: 335px;
+}
+
+.results-container {
+  width: 335px;
+  margin-left: 155px;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 10px;
+}
+
+.table-container {
+  width: 520px;
+  margin: 15px auto;
+  background-color: white;
+  border-radius: 5px;
+}
+
+.sticky-header {
+  margin-left: 20px;
+  position: sticky;
+  position: -webkit-sticky; 
+  top: 0;
+  background-color: #f2f2f2;
+}
+
+.edit-input {
+  width: 80px;
+}
+
+.link2-container {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  margin-top: -2px;
+  padding-top: 4px;
+  margin-right: 50px;
+}
+
+.edit-icons-container {
+  display: flex;
+  justify-content: center;
+}
+
+.edit-icon {
+  margin-right: 25px;
+  margin-top: 2px;
+}
+
+.delete-icon {
+  margin-top: 2px;
+}
+
+.handle-search {
+  display: flex;
+  align-items: center;
+
+}
+
+
+
