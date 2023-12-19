@@ -2,35 +2,26 @@ import React, { useState, useEffect } from "react";
 import AddEmployee from "./AddEmployee";
 import Dynamics365Entity from "./Dynamics365Entity";
 
-const MeetingSummary = ({ meetingId }) => {
+const MeetingSummary = ({ eventId }) => {
   const [meetings, setMeetings] = useState(null);
   const [error, setError] = useState(true);
 
   useEffect(() => {
-    const url = new URL(
-      "https://teams.microsoft.com/_#/scheduling-form/?isBroadcast=false&eventId=AAMkADBjMzUwZTk2LTNjZjQtNDg4OC05NGUzLWMzMjcwZGQzZDRlZgBGAAAAAABOL2KklS2zQ7eN7Yf7kB1dBwB6HKPOO2MUSrLAZ9rx2s0hAAAAAAENAAB6HKPOO2MUSrLAZ9rx2s0hAAEGhxJbAAA%3D&conversationId=19:meeting_YjEzNDNjMzAtMjUzMC00MWZhLTg3OTctZDQxOTE2MjNkMjM5@thread.v2&opener=1&providerType=0&navCtx=navigateHybridContentRoute&calendarType=1"
-    );
-    // Extract the meetingId from the URL hash
-    const hashParams = new URLSearchParams(url.hash.slice(1));
-    const meetingIdFromUrl = hashParams.get("eventId");
-    // const meetingIdFromUrl = url.searchParams.get("eventId");
+    
+    const urlParams = new URLSearchParams(window.location.href);
+    const eventIdFromUrl = urlParams.get("eventId") || "";
 
-    // Replace the placeholder with the actual meetingId
-    const apiUrl =
-      "https://prod-27.centralindia.logic.azure.com:443/workflows/84d9c85cd2fd43509af9186e4d93133d/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ubO2vmGZz2ZBkE6BDMHpOyr3aTI-CRmsktVAR9xV9bE".replace(
-        "{eventId}",
-        meetingIdFromUrl
-      );
-
-    fetch(apiUrl, {
+    fetch("https://prod-23.centralindia.logic.azure.com:443/workflows/d54609ee409d43c585faadc8662fdef2/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2QMl4KEiiLAbl6HVYCT77ZkKK2nfJj2aAmX-JjYTpwo", {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        meetingid: meetingIdFromUrl,
-        // "AAMkADBjMzUwZTk2LTNjZjQtNDg4OC05NGUzLWMzMjcwZGQzZDRlZgBGAAAAAABOL2KklS2zQ7eN7Yf7kB1dBwB6HKPOO2MUSrLAZ9rx2s0hAAAAAAENAAB6HKPOO2MUSrLAZ9rx2s0hAAEHlhhOAAA%3D",
+        meetingid: 
+        
+        // meetingIdFromUrl,
+        "AAMkAGE1ZDY0NTUwLWI1NzAtNDY1ZC05NmNlLWVkZjRhZjA5OGNlYgBGAAAAAADNK1DG-ahMQIy43ILp9pGJBwC7OR04RU5FTI1XBVGTm0B3AAAAAAENAAC7OR04RU5FTI1XBVGTm0B3AABHcOnQAAA=",
       }),
     })
       .then((res) => {
@@ -66,21 +57,21 @@ const MeetingSummary = ({ meetingId }) => {
           <Dynamics365Entity />
           <table style={{ marginTop: "20px", marginLeft: "350px" }}>
             <tbody>
-              <tr style={{ display: "none" }}>
+              {/* <tr style={{ display: "none" }}>
                 <td>Subject</td>
                 <td>{meetings.Subject}</td>
-              </tr>
-              <tr style={{ display: "none" }}>
+              </tr> */}
+              {/* <tr style={{ display: "none" }}>
                 <td>TimeZone</td>
                 <td>{meetings.TimeZone}</td>
-              </tr>
+              </tr> */}
               <tr>
                 <td dangerouslySetInnerHTML={{ __html: meetings.Content }}></td>
               </tr>
-              <tr style={{ display: "none" }}>
+              {/* <tr style={{ display: "block" }}>
                 <td>MeetingID</td>
-                <td>{meetings.MeetingID}</td>
-              </tr>
+                <td>{meetings.meetingid}</td>
+              </tr> */}
             </tbody>
           </table>
         </div>

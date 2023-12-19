@@ -21,6 +21,7 @@ const Dynamics365Entity = () => {
     LastName: "",
   });
 
+  
   const handleInputChange = (event, userId, field) => {
     const value = event.target.value;
     setEditedUsers((prevEditedUsers) => ({
