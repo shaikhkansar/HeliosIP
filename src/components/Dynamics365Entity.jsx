@@ -21,7 +21,6 @@ const Dynamics365Entity = () => {
     LastName: "",
   });
 
-  
   const handleInputChange = (event, userId, field) => {
     const value = event.target.value;
     setEditedUsers((prevEditedUsers) => ({
@@ -208,13 +207,18 @@ const Dynamics365Entity = () => {
                     ))}
                     <td>
                       <div className="link2-container">
+                        <span  data-bs-toggle="tooltip"
+                          data-bs-placement="top"
+                          title="Click to go to the Employee Details">
                         <Link2
                           size="22px"
                           color="#5b5fc7"
+                         
                           onClick={() =>
                             window.open(`${user.ItemLink}`, "_blank")
                           }
                         />
+                        </span>
                       </div>
                     </td>
                     <td>
