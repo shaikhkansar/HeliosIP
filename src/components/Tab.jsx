@@ -12,6 +12,10 @@ class Tab extends React.Component {
     this.state = {
       context: {
         meetingId: "",
+        userName:"",
+        meetingTitle:"",
+        
+
       },
     };
   }
@@ -26,10 +30,11 @@ class Tab extends React.Component {
       // Get the user context from Teams and set it in the state
       app.getContext().then(async (context) => {
         this.setState({
-          // meetingId: context.meeting.id,
-          // userName: context.user.userPrincipalName,
-          // meetingTitle : context.meeting.meetingTitle,
+          meetingId: context.meeting.id,
+          userName: context.user.userPrincipalName,
+          meetingTitle : context.meeting.meetingTitle,
         });
+        console.log('context meeting',context)
 
         // Enable app caching.
         // App Caching was configured in this sample to reduce the reload time of your app in a meeting.
@@ -53,13 +58,15 @@ class Tab extends React.Component {
   }
   render() {
     let meetingId = this.state.meetingId ?? "";
-    let meetingTitle = this.state.meetingTitle ?? "";
     let userPrincipleName = this.state.userName ?? "";
+    let meetingTitle = this.state.meetingTitle ?? "";
 
     return (
       <div padding-left="0px">
-        {/* <p>{meetingId}</p>
-         <p>{meetingTitle}</p> */}
+        {/* <p>{meetingId}</p> */}
+        {/* <h3>Principle Name:</h3>
+         <p>{userPrincipleName}</p> */}
+         <p>{meetingTitle}</p>
         {
           /*<Dynamics365Entity/>*/
           // <AddEmployee/>

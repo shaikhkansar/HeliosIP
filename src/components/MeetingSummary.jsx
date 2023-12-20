@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import AddEmployee from "./AddEmployee";
 import Dynamics365Entity from "./Dynamics365Entity";
 
-const MeetingSummary = ({ eventId }) => {
+const MeetingSummary = ({ MeetingID  }) => {
   const [meetings, setMeetings] = useState(null);
   const [error, setError] = useState(true);
 
@@ -10,6 +10,7 @@ const MeetingSummary = ({ eventId }) => {
     
     const urlParams = new URLSearchParams(window.location.href);
     const eventIdFromUrl = urlParams.get("eventId") || "";
+    console.log(window.location.href, "event url")
 
     fetch("https://prod-23.centralindia.logic.azure.com:443/workflows/d54609ee409d43c585faadc8662fdef2/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2QMl4KEiiLAbl6HVYCT77ZkKK2nfJj2aAmX-JjYTpwo", {
       method: "POST",
@@ -19,31 +20,30 @@ const MeetingSummary = ({ eventId }) => {
       },
       body: JSON.stringify({
         meetingid: 
-        
-        // meetingIdFromUrl,
-        "AAMkAGE1ZDY0NTUwLWI1NzAtNDY1ZC05NmNlLWVkZjRhZjA5OGNlYgBGAAAAAADNK1DG-ahMQIy43ILp9pGJBwC7OR04RU5FTI1XBVGTm0B3AAAAAAENAAC7OR04RU5FTI1XBVGTm0B3AABHcOnQAAA=",
+        // eventIdFromUrl,
+        "AAMkAGE1ZDY0NTUwLWI1NzAtNDY1ZC05NmNlLWVkZjRhZjA5OGNlYgBGAAAAAADNK1DG-ahMQIy43ILp9pGJBwC7OR04RU5FTI1XBVGTm0B3AAAAAAENAAC7OR04RU5FTI1XBVGTm0B3AABIKL2UAAA%3D",
       }),
     })
-      .then((res) => {
-        console.log(res, "Response-check-api");
-        if (res.status !== 200) {
-          console.log("invalid meeting id");
-          setError(res.ok);
-          throw new Error("This meeting is not compatible for this App !!!");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        console.log(data);
-        setMeetings(data);
-        setError(null);
-        console.log("the meeting details", data.value);
-      })
-      .catch((error) => {
-        setError(error.message);
-        console.error("Error fetching meeting details", error);
-      });
-  }, []);
+    .then((res) => {
+      console.log(res, "Response-check-api");
+      if (!res.ok) {
+        console.log("invalid meeting id");
+        setError("This meeting is not compatible for this App !!!");
+        throw new Error("This meeting is not compatible for this App !!!");
+      }
+      return res.json();
+    })
+    .then((data) => {
+      console.log(data);
+      setMeetings(data);
+      setError(null);
+      console.log("the meeting details", data.value);
+    })
+    .catch((error) => {
+      setError(error.message);
+      console.error("Error fetching meeting details", error);
+    });
+}, [MeetingID]);
 
   return (
     <div className="App" style={{ marginTop: "-55px", marginRight: "60px" }}>
@@ -68,6 +68,7 @@ const MeetingSummary = ({ eventId }) => {
               <tr>
                 <td dangerouslySetInnerHTML={{ __html: meetings.Content }}></td>
               </tr>
+              
               {/* <tr style={{ display: "block" }}>
                 <td>MeetingID</td>
                 <td>{meetings.meetingid}</td>
