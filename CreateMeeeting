@@ -1,4 +1,4 @@
-function sayhello(primaryControl) {
+function CreateMeeeting(primaryControl) {
   console.log("inside create function call");
   try {
     var itemlink = window.parent.location.href;
