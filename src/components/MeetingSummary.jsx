@@ -7,9 +7,6 @@ const MeetingSummary = ({ MeetingID  }) => {
   const [error, setError] = useState(true);
 
   useEffect(() => {
-    
-    const urlParams = new URLSearchParams(window.location.href);
-    const eventIdFromUrl = urlParams.get("eventId") || "";
     console.log(MeetingID, "chatId url")
 
     fetch("https://prod-12.centralindia.logic.azure.com:443/workflows/7dcc34dfa675415090f2b1316ec4ff60/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=H9u6thBJzYFfTwmNZDDzr4QseMH0JSJKMmT-XWk3qzU", {
