@@ -33,6 +33,7 @@ class Tab extends React.Component {
           meetingId: context.meeting.id,
           userName: context.user.userPrincipalName,
           meetingTitle : context.meeting.meetingTitle,
+          chatId: context.chat.id
         });
         console.log('context meeting',context)
 
@@ -60,17 +61,18 @@ class Tab extends React.Component {
     let meetingId = this.state.meetingId ?? "";
     let userPrincipleName = this.state.userName ?? "";
     let meetingTitle = this.state.meetingTitle ?? "";
+    let chatId = this.state.chatId ?? "";
 
     return (
       <div padding-left="0px">
         {/* <p>{meetingId}</p> */}
         {/* <h3>Principle Name:</h3>
          <p>{userPrincipleName}</p> */}
-         <p>{meetingTitle}</p>
+         {/* <p>{chatId}</p> */}
         {
           /*<Dynamics365Entity/>*/
           // <AddEmployee/>
-          <MeetingSummary />
+          <MeetingSummary MeetingID={chatId}/>
           /*<h1>In-meeting app sample1</h1>
            <h3>Principle Name:</h3>
            <p>{userPrincipleName}</p>

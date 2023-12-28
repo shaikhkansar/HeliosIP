@@ -126,7 +126,7 @@ const Dynamics365Entity = () => {
 
   useEffect(() => {
     fetch(
-      "https://prod-14.centralindia.logic.azure.com:443/workflows/217efe8467b24a79941bc0abbac4da30/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2tFlQ4aPY4GqLiyH2X0EkrqDHOliq0uY2cF4ZEaEK_E",
+      "https://prod-09.centralindia.logic.azure.com:443/workflows/956a793c1fd24402a24e7444d476dcee/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ETojxJWXOIgiskFgv8keTaJhaY2HoSATeD_t52WYWCY",
       { method: "POST" }
     )
       .then((res) => res.json())
