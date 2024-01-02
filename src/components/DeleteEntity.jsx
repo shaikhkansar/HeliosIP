@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Trash2, XSquare } from "react-feather";
 import { Modal } from "react-bootstrap";
 
-const DeleteEntity = ({ user, handleDelete }) => {
+const DeleteEntity = ({ user, handleDelete, }) => {
   const [showModal, setShowModal] = useState(false);
   const [deleteSuccess, setDeleteSuccess] = useState(false);
 
@@ -26,7 +26,20 @@ const DeleteEntity = ({ user, handleDelete }) => {
   return (
     <>
    
-   
+  
+      {deleteSuccess && (
+        <h6
+          className="text-success"
+          style={{
+            color: "green",
+            marginTop: "10px",
+            marginLeft: "410px",
+            whiteSpace: "nowrap",
+          }}
+        >
+          Employee deleted successfully!
+        </h6>
+      )}
     <span className="" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete">
       <Trash2
         size="20px"

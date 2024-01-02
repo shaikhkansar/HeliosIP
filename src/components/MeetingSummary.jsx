@@ -1,27 +1,26 @@
 import React, { useState, useEffect } from "react";
-import AddEmployee from "./AddEmployee";
+import AddEntity from "./AddEntity";
 import Dynamics365Entity from "./Dynamics365Entity";
 
 const MeetingSummary = ({ MeetingID  }) => {
   const [meetings, setMeetings] = useState(null);
   const [error, setError] = useState(true);
 
-  useEffect(() => {
-    
-    const urlParams = new URLSearchParams(window.location.href);
-    const eventIdFromUrl = urlParams.get("eventId") || "";
-    console.log(window.location.href, "event url")
+  // console.log('meeting ID',)
 
-    fetch("https://prod-23.centralindia.logic.azure.com:443/workflows/d54609ee409d43c585faadc8662fdef2/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2QMl4KEiiLAbl6HVYCT77ZkKK2nfJj2aAmX-JjYTpwo", {
+  useEffect(() => {
+    console.log(MeetingID, "chatId url")
+
+    fetch("https://prod-19.centralindia.logic.azure.com:443/workflows/bd55225e5fd84e8d82664b4860200eff/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=_pPuav4TDEfPJR9WIWihvjvWNrP4kpqKjHThpvT5-Fg", {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        meetingid: 
+        chatID: MeetingID
         // eventIdFromUrl,
-        "AAMkAGE1ZDY0NTUwLWI1NzAtNDY1ZC05NmNlLWVkZjRhZjA5OGNlYgBGAAAAAADNK1DG-ahMQIy43ILp9pGJBwC7OR04RU5FTI1XBVGTm0B3AAAAAAENAAC7OR04RU5FTI1XBVGTm0B3AABIKL2gAAA%3D",
+        // "AAMkADBjMzUwZTk2LTNjZjQtNDg4OC05NGUzLWMzMjcwZGQzZDRlZgBGAAAAAABOL2KklS2zQ7eN7Yf7kB1dBwB6HKPOO2MUSrLAZ9rx2s0hAAAAAAENAAB6HKPOO2MUSrLAZ9rx2s0hAAEOj4QMAAA=",
       }),
     })
     .then((res) => {
@@ -34,10 +33,39 @@ const MeetingSummary = ({ MeetingID  }) => {
       return res.json();
     })
     .then((data) => {
-      console.log(data);
       setMeetings(data);
       setError(null);
-      console.log("the meeting details", data.value);
+      console.log("the chat details", data);
+      fetch("https://prod-27.centralindia.logic.azure.com:443/workflows/84d9c85cd2fd43509af9186e4d93133d/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ubO2vmGZz2ZBkE6BDMHpOyr3aTI-CRmsktVAR9xV9bE", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          meetingid: data.chatID
+          // eventIdFromUrl,
+          // meetingid:"AAMkADBjMzUwZTk2LTNjZjQtNDg4OC05NGUzLWMzMjcwZGQzZDRlZgBGAAAAAABOL2KklS2zQ7eN7Yf7kB1dBwB6HKPOO2MUSrLAZ9rx2s0hAAAAAAENAAB6HKPOO2MUSrLAZ9rx2s0hAAETNKUaAAA=",
+        }),
+      })
+      .then((res) => {
+        console.log(res, "Response-check-api");
+        if (!res.ok) {
+          setError("This meeting is not compatible for this App !!!");
+          throw new Error("This meeting is not compatible for this App !!!");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data);
+        setMeetings(data);
+        setError(null);
+        console.log("the meeting details", data.value);
+      })
+      .catch((error) => {
+        setError(error.message);
+        console.error("Error fetching meeting details", error);
+      });
     })
     .catch((error) => {
       setError(error.message);

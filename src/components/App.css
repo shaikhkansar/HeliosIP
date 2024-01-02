@@ -97,5 +97,16 @@ body {
 
 }
 
+/* Add this to your CSS file or component */
+.trash-icon {
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Add smooth transition effect */
+}
+
+.trash-icon:hover {
+  background-color: #ff0000; /* Change to the desired background color on hover */
+  color: #fff; /* Change to the desired text color on hover */
+}
+
 
 

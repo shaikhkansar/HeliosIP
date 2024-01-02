@@ -15,7 +15,7 @@ export default function App() {
         <Route path="/termsofuse" element={<TermsOfUse />} />
         <Route path="/tab" element={<Tab />} />
         <Route path="/config" element={<TabConfig />} />
-        <Route path="/meeting/:meetingId" component={MeetingSummary} />
+        <Route path="/meeting-summary" element={<MeetingSummary />} />
       </Routes>
     </Router>
   );
