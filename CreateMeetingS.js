@@ -1,4 +1,4 @@
-function sayhello(primaryControl) {
+function createmeeting(primaryControl) {
   console.log("inside create function call");
   try {
     var itemlink = window.parent.location.href;
@@ -15,7 +15,8 @@ function sayhello(primaryControl) {
     var strattendees = formContext.getAttribute("crea6_attendees").getValue();
     varConvertedstartDate = strstartdate.toISOString();
     varConvertedendDate = strenddate.toISOString();
-    var strmeetingid = formContext.getAttribute("crea6_meetingid").getValue();
+    
+    
     
  
     var tableHTML = "<p>This is Schedule to discuss for following item.</P><br><table>" +
@@ -24,8 +25,7 @@ function sayhello(primaryControl) {
                         "<tr><td>Employee ID</td><td>" + stremployeeid + "</td></tr>" +
                         "<tr><td>First Name</td><td>" + strname + "</td></tr>" +
                         "<tr><td>Last Name</td><td>" + strlname + "</td></tr>" +
-                        "<tr><td colspan=2>"+ strmessage + "</td></tr>" +
-                        "<tr><td colspan=2>"+ strmeetingid + "</td></tr>" +
+                        "<tr><td colspan=2>"+ strmessage + "</td></tr>"
                        "</table>";
 
       var strmessageWithTable = tableHTML;
@@ -48,8 +48,7 @@ function sayhello(primaryControl) {
             TimeZone: strtimezone,
             Starttime: varConvertedstartDate,
             Endtime: varConvertedendDate,
-            Attendees: strattendees,
-	    MeetingId : strmeetingid,
+            Attendees: strattendees
           }),
       }
     ).then((response) => {
@@ -60,6 +59,11 @@ function sayhello(primaryControl) {
         // Example: setIsPopup(true); with a success message
         // setIsPopup(true);
         console.log("Request successful!");
+//       meetingid = response.json()["metingid'];
+//get MeetingID
+//then update here
+       // formContext.getAttribute("cre6_meetingid").setValue(meetingid); 
+
       } else {
         // Handle API error
         console.log("API error:", response);
