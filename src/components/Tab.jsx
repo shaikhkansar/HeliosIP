@@ -14,6 +14,7 @@ class Tab extends React.Component {
         meetingId: "",
         userName:"",
         meetingTitle:"",
+        chatId:"",
         
 
       },
@@ -30,10 +31,10 @@ class Tab extends React.Component {
       // Get the user context from Teams and set it in the state
       app.getContext().then(async (context) => {
         this.setState({
-          meetingId: context.meeting.id,
+          // meetingId: context.meeting.id,
           userName: context.user.userPrincipalName,
           meetingTitle : context.meeting.meetingTitle,
-          chatId: context.chat.id
+          // chatId: context.chat.id
         });
         console.log('context meeting',context)
 
@@ -58,7 +59,7 @@ class Tab extends React.Component {
     // Next steps: Error handling using the error object
   }
   render() {
-    let meetingId = this.state.meetingId ?? "";
+    // let meetingId = this.state.meetingId ?? "";
     let userPrincipleName = this.state.userName ?? "";
     let meetingTitle = this.state.meetingTitle ?? "";
     let chatId = this.state.chatId ?? "";
@@ -68,11 +69,11 @@ class Tab extends React.Component {
         {/* <p>{meetingId}</p> */}
         {/* <h3>Principle Name:</h3>
          <p>{userPrincipleName}</p> */}
-         {/* <p>{chatId}</p> */}
+         <p>{chatId}</p>
         {
           /*<Dynamics365Entity/>*/
           // <AddEmployee/>
-          <MeetingSummary MeetingID={chatId}/>
+          <MeetingSummary/>
           /*<h1>In-meeting app sample1</h1>
            <h3>Principle Name:</h3>
            <p>{userPrincipleName}</p>

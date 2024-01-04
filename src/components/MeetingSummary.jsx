@@ -2,23 +2,21 @@ import React, { useState, useEffect } from "react";
 import AddEmployee from "./AddEmployee";
 import Dynamics365Entity from "./Dynamics365Entity";
 
-const MeetingSummary = ({ MeetingID  }) => {
-  const [meetings, setMeetings] = useState(null);
+const MeetingSummary = ({chatid}) => {
+  const [employees, setEmployees] = useState(null);
   const [error, setError] = useState(true);
 
   useEffect(() => {
-    console.log(MeetingID, "chatId url")
-
-    fetch("https://prod-12.centralindia.logic.azure.com:443/workflows/7dcc34dfa675415090f2b1316ec4ff60/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=H9u6thBJzYFfTwmNZDDzr4QseMH0JSJKMmT-XWk3qzU", {
+    
+    
+    fetch("https://prod-03.centralindia.logic.azure.com:443/workflows/d3ee0df170f442c28f9d0aad00decdaf/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=TUxwXjMdAxOzXQKSNCBM80V4S4qEL9Mu7BlDKgBwe00", {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        chatID: MeetingID
-        // eventIdFromUrl,
-        // "AAMkADBjMzUwZTk2LTNjZjQtNDg4OC05NGUzLWMzMjcwZGQzZDRlZgBGAAAAAABOL2KklS2zQ7eN7Yf7kB1dBwB6HKPOO2MUSrLAZ9rx2s0hAAAAAAENAAB6HKPOO2MUSrLAZ9rx2s0hAAEOj4QMAAA=",
+       chatid: "19%3ameeting_MmUyNTVmMGEtNWQxZi00MjhiLWEwYzctMGI4NGEyZjE5OTY3%40thread.v2"
       }),
     })
     .then((res) => {
@@ -31,45 +29,16 @@ const MeetingSummary = ({ MeetingID  }) => {
       return res.json();
     })
     .then((data) => {
-      setMeetings(data);
+      console.log(data);
+      setEmployees(data);
       setError(null);
-      console.log("the chat details", data);
-      fetch("https://prod-27.centralindia.logic.azure.com:443/workflows/84d9c85cd2fd43509af9186e4d93133d/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ubO2vmGZz2ZBkE6BDMHpOyr3aTI-CRmsktVAR9xV9bE", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          meetingid: data.onlineMeetingInfo.calendarEventId
-          // eventIdFromUrl,
-          // "AAMkADBjMzUwZTk2LTNjZjQtNDg4OC05NGUzLWMzMjcwZGQzZDRlZgBGAAAAAABOL2KklS2zQ7eN7Yf7kB1dBwB6HKPOO2MUSrLAZ9rx2s0hAAAAAAENAAB6HKPOO2MUSrLAZ9rx2s0hAAEOj4QMAAA=",
-        }),
-      })
-      .then((res) => {
-        console.log(res, "Response-check-api");
-        if (!res.ok) {
-          setError("This meeting is not compatible for this App !!!");
-          throw new Error("This meeting is not compatible for this App !!!");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        console.log(data);
-        setMeetings(data);
-        setError(null);
-        console.log("the meeting details", data.value);
-      })
-      .catch((error) => {
-        setError(error.message);
-        console.error("Error fetching meeting details", error);
-      });
+      console.log("the meeting details", data.value);
     })
     .catch((error) => {
-      setError(error.message);
+      setError("Error fetching meeting details");
       console.error("Error fetching meeting details", error);
     });
-}, [MeetingID]);
+}, [chatid]);
 
   return (
     <div className="App" style={{ marginTop: "-55px", marginRight: "60px" }}>
@@ -77,28 +46,25 @@ const MeetingSummary = ({ MeetingID  }) => {
         <p style={{ marginLeft: "80px", color: "red", fontSize: "16px" }}>
           {error}
         </p>
-      ) : meetings ? (
-        <div>
-          {/* <AddEmployee /> */}
-          <Dynamics365Entity />
-          <table style={{ marginTop: "20px", marginLeft: "350px" }}>
-            <tbody>
-              {/* <tr style={{ display: "none" }}>
-                <td>Subject</td>
-                <td>{meetings.Subject}</td>
-              </tr> */}
-              {/* <tr style={{ display: "none" }}>
-                <td>TimeZone</td>
-                <td>{meetings.TimeZone}</td>
-              </tr> */}
+       ) : employees ? (
+        <div >
+          <Dynamics365Entity/>
+          <table>
+            <thead>
               <tr>
-                <td dangerouslySetInnerHTML={{ __html: meetings.Content }}></td>
+                <th>Employee ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
               </tr>
-              
-              {/* <tr style={{ display: "block" }}>
-                <td>MeetingID</td>
-                <td>{meetings.meetingid}</td>
-              </tr> */}
+            </thead>
+            <tbody>
+              {employees.map((employee) => (
+                <tr key={employee.EmployeeID}>
+                  <td>{employee.EmployeeID}</td>
+                  <td>{employee.FirstName}</td>
+                  <td>{employee.LastName}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

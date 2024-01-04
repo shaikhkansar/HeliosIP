@@ -5,13 +5,13 @@ import "./AddEmployee.css";
 const AddEmployee = ({ deleteSuccess, saveSuccess }) => {
   
   const [formData, setFormData] = useState({
-    EmployeesID: "",
+    EmployeeID: "",
     FirstName: "",
     LastName: "",
   });
   const [isPopup, setIsPopup] = useState(false);
   const [formErrors, setFormErrors] = useState({
-    EmployeesID: false,
+    EmployeeID: false,
     FirstName: false,
     LastName: false,
   });
@@ -28,7 +28,7 @@ const AddEmployee = ({ deleteSuccess, saveSuccess }) => {
     e.preventDefault();
 
     setFormData({
-      EmployeesID: "",
+      EmployeeID: "",
       FirstName: "",
       LastName: "",
     });
@@ -53,7 +53,7 @@ const AddEmployee = ({ deleteSuccess, saveSuccess }) => {
 
     try {
       const response = await fetch(
-        "https://prod-21.centralindia.logic.azure.com:443/workflows/affd8cc9893948a2bae4cc4a65f9fa90/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=4asos1JGB9vBj-v1DqJeNsJE_rb_dZsQRJDg3VI_2Zw",
+        "https://prod-15.centralindia.logic.azure.com:443/workflows/7bdc8dc16bba4da790e2f870e4b4e386/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=9LmJc1NHPZY7OOwgz1I7qQkO56rFJuxAcnT8wZ2ytn0",
         {
           method: "POST",
           headers: {
@@ -118,14 +118,14 @@ const AddEmployee = ({ deleteSuccess, saveSuccess }) => {
       <div className="main-container">
         <form onSubmit={handleSubmit}>
           <div className="row mb-2">
-            {["EmployeesID", "FirstName", "LastName"].map((field) => (
+            {["EmployeeID", "FirstName", "LastName"].map((field) => (
               <div key={field} className="col">
                 <input
                   type="text"
                   className={`form-control ${
                     formErrors[field] ? "is-invalid" : ""
                   }`}
-                  placeholder={field === "EmployeesID" ? "User ID" : field}
+                  placeholder={field === "EmployeeID" ? "User ID" : field}
                   id={field}
                   name={field}
                   value={formData[field]}
@@ -134,7 +134,7 @@ const AddEmployee = ({ deleteSuccess, saveSuccess }) => {
                 {formErrors[field] && (
                   <div className="invalid-feedback">
                     {`Please fill in ${
-                      field === "EmployeesID" ? "User ID" : field
+                      field === "EmployeeID" ? "User ID" : field
                     }`}
                   </div>
                 )}

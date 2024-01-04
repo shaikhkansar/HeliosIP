@@ -31,23 +31,36 @@ const Dynamics365Entity = () => {
 
   const handleAdd = () => {
     const newUser = { ...formData, ItemLink: formData.ItemLink || "" };
-    setUsers([...users, newUser]);
+    setUsers((prevUsers) => [...prevUsers, newUser]); // Use a functional update to ensure consistency
     setFormData({ EmployeesID: "", FirstName: "", LastName: "", ItemLink: "" });
   };
+  
 
   const handleEdit = (user) => {
     setEditedUsers((prevEditedUsers) => ({
-      ...prevEditedUsers,
       [user.EmployeesID]: { ...user, isEditing: true },
+      ...Object.fromEntries(Object.entries(prevEditedUsers).map(([userId, userData]) => [userId, { ...userData, isEditing: false }])),
     }));
   };
-
+  
   const handleSave = async (userId) => {
     try {
       const editedUser = editedUsers[userId];
-
+  
+      // Immediately update the local state for the specific user being edited
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user.EmployeeID === userId ? { ...user, ...editedUser } : user
+        )
+      );
+  
+      setEditedUsers((prevEditedUsers) => ({
+        ...prevEditedUsers,
+        [userId]: { ...prevEditedUsers[userId], isEditing: false },
+      }));
+  
       const response = await fetch(
-        "https://prod-21.centralindia.logic.azure.com:443/workflows/1290c468508e4c41b259ad86daac3852/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=KBx5zqzkElvYM9vL2rzoZ0BQBsUYE1Q8zYjej-GiFSE",
+        "https://prod-10.centralindia.logic.azure.com/workflows/6515b39ef48e4a24a3ad8982da8ad225/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ck8CwBwsoPdzdPlaU05INKBKg3wGQRFzYNEC18evopM",
         {
           method: "POST",
           headers: {
@@ -55,36 +68,32 @@ const Dynamics365Entity = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            EmployeesID: editedUser.EmployeesID,
+            EmployeeID: editedUser.EmployeeID, // Make sure this matches your data structure
             FirstName: editedUser.FirstName,
             LastName: editedUser.LastName,
             // Add other properties if needed
           }),
         }
       );
-
+  
       if (response.ok) {
-        setSaveSuccess(true); // Set saveSuccess to true after successful save
-        setTimeout(() => setSaveSuccess(false), 2000); // Automatically hide the message after 3000 milliseconds (3 seconds)
-
-        setEditedUsers((prevEditedUsers) => ({
-          ...prevEditedUsers,
-          [userId]: {
-            ...prevEditedUsers[userId],
-            isEditing: false,
-          },
-        }));
-
+        setSaveSuccess(true);
+        setTimeout(() => setSaveSuccess(false), 2000);
         console.log("Edit request successful!");
       } else {
-        // Handle API error
-        console.log("API error:", response);
+        console.error("API error:", response);
+        // Optionally, handle the error or show an error notification to the user
       }
     } catch (error) {
-      // Handle network error
       console.error("Network error:", error);
+      // Optionally, handle the network error or show a network error notification to the user
     }
   };
+  
+  
+  
+  
+  
   const handleCancel = (employeesID) => {
     setEditedUsers((prevEditedUsers) => ({
       ...prevEditedUsers,
@@ -95,7 +104,7 @@ const Dynamics365Entity = () => {
   const handleDelete = async (userId) => {
     try {
       const response = await fetch(
-        `https://prod-22.centralindia.logic.azure.com:443/workflows/a1307a92ea314a5caadec200102b181c/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=InDCrp4yrcmNPrORMRByPiYC3ZSnmnmSNObDsMLzvdM`,
+        `https://prod-05.centralindia.logic.azure.com/workflows/fb561abe2fd341fe8051b63545c06a51/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=uxGd3W11Mv8noIsd2E1qzANPjzaIqq85KfJcsg7OPhU`,
         {
           method: "POST",
           headers: {
