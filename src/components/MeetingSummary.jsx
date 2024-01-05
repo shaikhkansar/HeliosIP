@@ -1,85 +1,118 @@
 import React, { useState, useEffect } from "react";
 import AddEmployee from "./AddEmployee";
 import Dynamics365Entity from "./Dynamics365Entity";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@mui/material";
 
-const MeetingSummary = ({ MeetingID  }) => {
-  const [meetings, setMeetings] = useState(null);
-  const [error, setError] = useState(true);
+const MeetingSummary = ({ chatid }) => {
+  const [employees, setEmployees] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    
-    const urlParams = new URLSearchParams(window.location.href);
-    const eventIdFromUrl = urlParams.get("eventId") || "";
-    console.log(window.location.href, "event url")
+    let isMounted = true;
 
-    fetch("https://prod-23.centralindia.logic.azure.com:443/workflows/d54609ee409d43c585faadc8662fdef2/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2QMl4KEiiLAbl6HVYCT77ZkKK2nfJj2aAmX-JjYTpwo", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        meetingid: 
-        // eventIdFromUrl,
-        "AAMkAGE1ZDY0NTUwLWI1NzAtNDY1ZC05NmNlLWVkZjRhZjA5OGNlYgBGAAAAAADNK1DG-ahMQIy43ILp9pGJBwC7OR04RU5FTI1XBVGTm0B3AAAAAAENAAC7OR04RU5FTI1XBVGTm0B3AABIKL2gAAA%3D",
-      }),
-    })
-    .then((res) => {
-      console.log(res, "Response-check-api");
-      if (!res.ok) {
-        console.log("invalid meeting id");
-        setError("This meeting is not compatible for this App !!!");
-        throw new Error("This meeting is not compatible for this App !!!");
+    const fetchData = async () => {
+      try {
+        const encodeddata = encodeURIComponent(chatid);
+        const modifiedEncodedData = encodeddata.replace(/%3A/g, "%3a");
+
+        const response = await fetch(
+          "https://prod-03.centralindia.logic.azure.com:443/workflows/d3ee0df170f442c28f9d0aad00decdaf/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=TUxwXjMdAxOzXQKSNCBM80V4S4qEL9Mu7BlDKgBwe00",
+          {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              chatid: modifiedEncodedData,
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          setError("This meeting is not compatible for this App !!!");
+          throw new Error("This meeting is not compatible for this App !!!");
+        }
+
+        const data = await response.json();
+
+        if (isMounted) {
+          setEmployees(data);
+          setError(null);
+        }
+
+        console.log("the meeting details", data.value);
+      } catch (error) {
+        if (isMounted) {
+          setError("Error fetching meeting details");
+        }
+        console.error("Error fetching meeting details", error);
       }
-      return res.json();
-    })
-    .then((data) => {
-      console.log(data);
-      setMeetings(data);
-      setError(null);
-      console.log("the meeting details", data.value);
-    })
-    .catch((error) => {
-      setError(error.message);
-      console.error("Error fetching meeting details", error);
-    });
-}, [MeetingID]);
+    };
 
+    fetchData();
+
+    return () => {
+      // Cleanup function to cancel any pending operations
+      isMounted = false;
+    };
+  }, [chatid]);
   return (
     <div className="App" style={{ marginTop: "-55px", marginRight: "60px" }}>
       {error ? (
         <p style={{ marginLeft: "80px", color: "red", fontSize: "16px" }}>
           {error}
         </p>
-      ) : meetings ? (
-        <div>
-          {/* <AddEmployee /> */}
+      ) : employees ? (
+        <>
           <Dynamics365Entity />
-          <table style={{ marginTop: "20px", marginLeft: "350px" }}>
-            <tbody>
-              {/* <tr style={{ display: "none" }}>
-                <td>Subject</td>
-                <td>{meetings.Subject}</td>
-              </tr> */}
-              {/* <tr style={{ display: "none" }}>
-                <td>TimeZone</td>
-                <td>{meetings.TimeZone}</td>
-              </tr> */}
-              <tr>
-                <td dangerouslySetInnerHTML={{ __html: meetings.Content }}></td>
-              </tr>
-              
-              {/* <tr style={{ display: "block" }}>
-                <td>MeetingID</td>
-                <td>{meetings.meetingid}</td>
-              </tr> */}
-            </tbody>
-          </table>
-        </div>
+          <h6
+            style={{ marginLeft: "350px", marginTop: "20px", width: "520px" }}
+          >
+            This is Schedule to discuss for following item.
+          </h6>
+          <div
+            style={{ marginLeft: "350px", marginTop: "20px", width: "520px" }}
+          >
+            <table className="table table-bordered table-striped">
+              <tbody>
+                <tr style={{ border: "1px solid lightgray" }}>
+                  <th scope="col">Employee ID</th>
+                  {employees.map((employee) => (
+                    <td key={employee.EmployeeID}>{employee.EmployeeID}</td>
+                  ))}
+                </tr>
+                <tr>
+                  <th scope="col">First Name</th>
+                  {employees.map((employee) => (
+                    <td key={employee.EmployeeID}>{employee.FirstName}</td>
+                  ))}
+                </tr>
+                <tr style={{ border: "1px solid lightgray" }}>
+                  <th scope="col">Last Name</th>
+                  {employees.map((employee) => (
+                    <td key={employee.EmployeeID}>{employee.LastName}</td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </>
       ) : (
-        <p style={{ marginLeft: "80px", color: "black", fontSize: "16px" }}>
-          Loading...
-        </p>
+        // <p style={{ marginLeft: "80px", color: "black", fontSize: "16px" }}>
+        //   Loading...
+        // </p>
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
       )}
     </div>
   );

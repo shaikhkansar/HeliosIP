@@ -6,10 +6,13 @@
   },
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
     "@fluentui/react-components": "^9.18.0",
     "@microsoft/teams-js": "^2.7.1",
     "@microsoft/teamsfx": "^2.2.0",
     "@microsoft/teamsfx-react": "^3.0.0",
+    "@mui/material": "^5.15.3",
     "axios": "^0.21.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.1",

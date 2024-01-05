@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import { Edit, Link2 } from "react-feather";
 import EditEntity from "./EditEntity";
 import DeleteEntity from "./DeleteEntity";
@@ -21,12 +21,17 @@ const Dynamics365Entity = () => {
     LastName: "",
   });
 
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
+
   const handleInputChange = (event, userId, field) => {
     const value = event.target.value;
+    console.log("Before state update:", editedUsers);
     setEditedUsers((prevEditedUsers) => ({
       ...prevEditedUsers,
       [userId]: { ...prevEditedUsers[userId], [field]: value },
     }));
+    console.log("After state update:", editedUsers);
+    // setTimeout(() => forceUpdate(), 10);
   };
 
   const handleAdd = () => {
@@ -35,11 +40,14 @@ const Dynamics365Entity = () => {
     setFormData({ EmployeesID: "", FirstName: "", LastName: "", ItemLink: "" });
   };
 
+  
+
   const handleEdit = (user) => {
     setEditedUsers((prevEditedUsers) => ({
       ...prevEditedUsers,
       [user.EmployeesID]: { ...user, isEditing: true },
     }));
+    
   };
 
   const handleSave = async (userId) => {
@@ -140,14 +148,29 @@ const Dynamics365Entity = () => {
           setError(error);
         }
       );
+     
   }, []);
 
-  const filteredUsers = users.filter((user) =>
-    [user.EmployeesID, user.FirstName, user.LastName, user.ItemLink]
+  useEffect(() => {
+    console.log("Edited users updated:", editedUsers);
+  }, [editedUsers]);
+
+  const filteredUsers = users.filter((user) => {
+    const searchString = [String(user.EmployeesID), user.FirstName, user.LastName, user.ItemLink]
       .join(" ")
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase())
-  );
+      .toLowerCase();
+  
+    const searchQueryLower = searchQuery.toLowerCase();
+  
+    if (searchQuery.length === 1 && /^\d$/.test(searchQueryLower)) {
+      // If the search query is a single digit, allow searching for a single-digit Employee ID
+      return String(user.EmployeesID).includes(searchQueryLower);
+    }
+  
+    // Otherwise, perform the standard search
+    return searchString.includes(searchQueryLower);
+  });
+  
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -187,12 +210,10 @@ const Dynamics365Entity = () => {
                       <td key={field}>
                         {editedUsers[user.EmployeesID]?.isEditing ? (
                           <input
-                            placeholder={
-                              field === "EmployeesID" ? "Emp-id" : field
-                            }
+                            placeholder={field === "EmployeesID" ? "Emp-id" : field}
                             className="form-control edit-input"
                             type="text"
-                            value={editedUsers[user.EmployeesID]?.[field]}
+                            value={editedUsers[user.EmployeesID]?.[field] || user[field]}
                             onChange={(event) =>
                               handleInputChange(event, user.EmployeesID, field)
                             }
