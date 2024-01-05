@@ -3,7 +3,7 @@ import { app, teamsCore } from "@microsoft/teams-js";
 import MediaQuery from "react-responsive";
 import "./App.css";
 import Dynamics365Entity from "./Dynamics365Entity";
-import AddEntity from "./AddEntity";
+import AddEmployee from "./AddEmployee";
 import MeetingSummary from "./MeetingSummary";
 class Tab extends React.Component {
   constructor(props) {
@@ -14,11 +14,7 @@ class Tab extends React.Component {
         meetingId: "",
         userName:"",
         meetingTitle:"",
-<<<<<<< HEAD
         chatId:"",
-=======
-        chatID:"",
->>>>>>> 3e8b4a5de38cb613c744f04c2e0cea2383a0d42d
         
 
       },
@@ -34,17 +30,14 @@ class Tab extends React.Component {
       app.notifySuccess();
       // Get the user context from Teams and set it in the state
       app.getContext().then(async (context) => {
-
         this.setState({
           // meetingId: context.meeting.id,
           userName: context.user.userPrincipalName,
           meetingTitle : context.meeting.meetingTitle,
           chatId: context.chat.id
         });
-        console.log('user principle name meeting',context.user.userPrincipalName)
-        // console.log("Tab Meeting Id1",this.state.context.meetingId);
-        // console.log("Tab Meeting Id2",context.meeting.meetingId);
-        // console.log("Tab Meeting Id3",context.id);
+        console.log('context meeting',context)
+
         // Enable app caching.
         // App Caching was configured in this sample to reduce the reload time of your app in a meeting.
         // To learn about limitations and available scopes, please check https://learn.microsoft.com/en-us/microsoftteams/platform/apps-in-teams-meetings/app-caching-for-your-tab-app.
@@ -66,10 +59,6 @@ class Tab extends React.Component {
     // Next steps: Error handling using the error object
   }
   render() {
-<<<<<<< HEAD
-=======
-   
->>>>>>> 3e8b4a5de38cb613c744f04c2e0cea2383a0d42d
     // let meetingId = this.state.meetingId ?? "";
     let userPrincipleName = this.state.userName ?? "";
     let meetingTitle = this.state.meetingTitle ?? "";
@@ -80,19 +69,11 @@ class Tab extends React.Component {
         {/* <p>{meetingId}</p> */}
         {/* <h3>Principle Name:</h3>
          <p>{userPrincipleName}</p> */}
-<<<<<<< HEAD
          {/* <p>{chatId}</p> */}
         {
           /*<Dynamics365Entity/>*/
           // <AddEmployee/>
           <MeetingSummary chatid={chatId}/>
-=======
-         <p>{chatId}</p>
-        {
-          /*<Dynamics365Entity/>*/
-          // <AddEmployee/>
-          <MeetingSummary MeetingID={chatId}/>
->>>>>>> 3e8b4a5de38cb613c744f04c2e0cea2383a0d42d
           /*<h1>In-meeting app sample1</h1>
            <h3>Principle Name:</h3>
            <p>{userPrincipleName}</p>

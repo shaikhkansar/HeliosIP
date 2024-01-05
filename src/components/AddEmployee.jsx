@@ -15,7 +15,7 @@ const AddEmployee = ({ deleteSuccess, saveSuccess }) => {
 
   const [formErrors, setFormErrors] = useState({
     EmployeesID: false,
-    FirstName: false,
+    FirstName: false, 
     LastName: false,
   });
 

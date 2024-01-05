@@ -1,12 +1,8 @@
-<<<<<<< HEAD
 import React, { useState, useEffect, useReducer } from "react";
 import { Edit, Link2 } from "react-feather";
-=======
-import React, { useState, useEffect } from "react";
-import { Edit, Link2, UserPlus } from "react-feather";
->>>>>>> 3e8b4a5de38cb613c744f04c2e0cea2383a0d42d
 import EditEntity from "./EditEntity";
 import DeleteEntity from "./DeleteEntity";
+import AddEmployee from "./AddEmployee";
 
 const Dynamics365Entity = () => {
   const [error, setError] = useState(null);
@@ -24,97 +20,6 @@ const Dynamics365Entity = () => {
     FirstName: "",
     LastName: "",
   });
-  const [formErrors, setFormErrors] = useState({
-    EmployeesID: false,
-    FirstName: false,
-    LastName: false,
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    setFormData({
-      EmployeesID: "",
-      FirstName: "",
-      LastName: "",
-    });
-
-    let hasErrors = false;
-    const newFormErrors = { EmployeesID: false, FirstName: false, LastName: false };
-
-    for (const field in formData) {
-      if (formData[field] === "") {
-        newFormErrors[field] = true;
-        hasErrors = true;
-      } else {
-        newFormErrors[field] = false;
-      }
-    }
-
-    if (hasErrors) {
-      return;
-    }
-
-    try {
-      const response = await fetch( //AddEntity flow Url
-        "https://prod-15.centralindia.logic.azure.com:443/workflows/7bdc8dc16bba4da790e2f870e4b4e386/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=9LmJc1NHPZY7OOwgz1I7qQkO56rFJuxAcnT8wZ2ytn0",
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
-      console.log("API response:", response);
-      
-      if (response.ok) {
-        setSaveSuccess(true);
-        setTimeout(() => setSaveSuccess(false), 2000);
-
-        console.log("Request successful!");
-      } else {
-        console.log("API error:", response);
-      }
-    } catch (error) {
-      console.error("Network error:", error);
-    }
-  };
-    useEffect(() => {   // dynamic365 Flow
-    fetch(
-      "https://prod-09.centralindia.logic.azure.com:443/workflows/956a793c1fd24402a24e7444d476dcee/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ETojxJWXOIgiskFgv8keTaJhaY2HoSATeD_t52WYWCY",
-      { method: "POST" }
-    )
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! Status: ${res.status}`);
-        }
-        return res.json();
-      })
-      .then(
-        (data) => {
-          setIsLoaded(true);
-          console.log("Fetched data:", data);
-          setUsers(data);
-        },
-        (error) => {
-          setIsLoaded(true);
-          setError(error);
-          console.error("Fetch error:", error);
-        }
-      );
-  }, []);
-  
-  
 
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
@@ -149,8 +54,8 @@ const Dynamics365Entity = () => {
     try {
       const editedUser = editedUsers[userId];
 
-      const response = await fetch( //edit flow
-        "https://prod-10.centralindia.logic.azure.com/workflows/6515b39ef48e4a24a3ad8982da8ad225/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ck8CwBwsoPdzdPlaU05INKBKg3wGQRFzYNEC18evopM",
+      const response = await fetch(
+        "https://prod-21.centralindia.logic.azure.com:443/workflows/1290c468508e4c41b259ad86daac3852/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=KBx5zqzkElvYM9vL2rzoZ0BQBsUYE1Q8zYjej-GiFSE",
         {
           method: "POST",
           headers: {
@@ -161,13 +66,14 @@ const Dynamics365Entity = () => {
             EmployeesID: editedUser.EmployeesID,
             FirstName: editedUser.FirstName,
             LastName: editedUser.LastName,
+            // Add other properties if needed
           }),
         }
       );
 
       if (response.ok) {
-        setSaveSuccess(true);
-        setTimeout(() => setSaveSuccess(false), 2000);
+        setSaveSuccess(true); // Set saveSuccess to true after successful save
+        setTimeout(() => setSaveSuccess(false), 2000); // Automatically hide the message after 3000 milliseconds (3 seconds)
 
         setEditedUsers((prevEditedUsers) => ({
           ...prevEditedUsers,
@@ -179,13 +85,14 @@ const Dynamics365Entity = () => {
 
         console.log("Edit request successful!");
       } else {
+        // Handle API error
         console.log("API error:", response);
       }
     } catch (error) {
+      // Handle network error
       console.error("Network error:", error);
     }
   };
-
   const handleCancel = (employeesID) => {
     setEditedUsers((prevEditedUsers) => ({
       ...prevEditedUsers,
@@ -195,8 +102,8 @@ const Dynamics365Entity = () => {
 
   const handleDelete = async (userId) => {
     try {
-      const response = await fetch( //delete flow
-        `https://prod-05.centralindia.logic.azure.com/workflows/fb561abe2fd341fe8051b63545c06a51/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=uxGd3W11Mv8noIsd2E1qzANPjzaIqq85KfJcsg7OPhU`,
+      const response = await fetch(
+        `https://prod-22.centralindia.logic.azure.com:443/workflows/a1307a92ea314a5caadec200102b181c/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=InDCrp4yrcmNPrORMRByPiYC3ZSnmnmSNObDsMLzvdM`,
         {
           method: "POST",
           headers: {
@@ -210,10 +117,12 @@ const Dynamics365Entity = () => {
       );
 
       if (response.ok) {
-        const updatedUsers = users.filter((user) => user.EmployeesID !== userId);
+        const updatedUsers = users.filter(
+          (user) => user.EmployeesID !== userId
+        );
         setUsers(updatedUsers);
-        setDeleteSuccess(true);
-        setTimeout(() => setDeleteSuccess(false), 2000);
+        setDeleteSuccess(true); // Set deleteSuccess to true after successful deletion
+        setTimeout(() => setDeleteSuccess(false), 2000); // Automatically hide the message after 3000 milliseconds (3 seconds)
         console.log("Delete request successful!");
       } else {
         console.log("Delete request failed. Server response:", response);
@@ -223,7 +132,6 @@ const Dynamics365Entity = () => {
     }
   };
 
-<<<<<<< HEAD
   useEffect(() => {
     fetch(
       "https://prod-14.centralindia.logic.azure.com:443/workflows/217efe8467b24a79941bc0abbac4da30/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2tFlQ4aPY4GqLiyH2X0EkrqDHOliq0uY2cF4ZEaEK_E",
@@ -249,10 +157,6 @@ const Dynamics365Entity = () => {
 
   const filteredUsers = users.filter((user) => {
     const searchString = [String(user.EmployeesID), user.FirstName, user.LastName, user.ItemLink]
-=======
-  const filteredUsers = users.filter((user) =>
-    [user.EmployeesID, user.FirstName, user.LastName, user.ItemLink]
->>>>>>> 3e8b4a5de38cb613c744f04c2e0cea2383a0d42d
       .join(" ")
       .toLowerCase();
   
@@ -271,52 +175,11 @@ const Dynamics365Entity = () => {
   if (error) {
     return <div>Error: {error.message}</div>;
   } else if (!isLoaded) {
-    return <div>Loading...</div>;
+    return <div></div>;
   } else {
     return (
       <>
-         {saveSuccess && (
-        <h6 style={{ color: "green", marginTop: "10px", marginLeft: "410px", whiteSpace: "nowrap" }}>
-          Employee saved successfully!
-        </h6>
-      )}
-
-        <div className="main-container">
-        <form onSubmit={handleSubmit}>
-          <div className="row mb-2">
-          {["EmployeesID", "FirstName", "LastName"].map((field) => (
-    <div key={field} className="col">
-        <input
-            type="text"
-            className={`form-control ${formErrors[field] ? "is-invalid" : ""}`}
-            placeholder={field === "EmployeesID" ? "User ID" : field}
-            id={field}
-            name={field}
-            value={formData[field]}
-            onChange={handleChange}
-        />
-        {formErrors[field] && (
-            <div className="invalid-feedback">
-                {`Please fill in ${field === "EmployeesID" ? "User ID" : field}`}
-            </div>
-        )}
-    </div>
-))}
-            <div className="d-grid gap-2 col-6 d-flex justify-content-left">
-              <button
-                type="submit"
-                className="btn btn-success"
-                data-bs-toggle="tooltip"
-                data-bs-placement="top"
-                title="Add Employees"
-              >
-                <UserPlus />
-              </button>
-            </div>
-          </div>
-        </form>
-        </div>
-
+        <AddEmployee deleteSuccess={deleteSuccess} saveSuccess={saveSuccess} />
         <div className="search-container">
           <div className="search-input">
             <div className="handle-search">
@@ -365,16 +228,17 @@ const Dynamics365Entity = () => {
                     ))}
                     <td>
                       <div className="link2-container">
-                        <span
-                          data-bs-toggle="tooltip"
+                        <span  data-bs-toggle="tooltip"
                           data-bs-placement="top"
-                          title="Click to go to the Employee Details"
-                        >
-                          <Link2
-                            size="22px"
-                            color="#5b5fc7"
-                            onClick={() => window.open(`${user.ItemLink}`, "_blank")}
-                          />
+                          title="Click to go to the Employee Details">
+                        <Link2
+                          size="22px"
+                          color="#5b5fc7"
+                         
+                          onClick={() =>
+                            window.open(`${user.ItemLink}`, "_blank")
+                          }
+                        />
                         </span>
                       </div>
                     </td>
@@ -404,7 +268,10 @@ const Dynamics365Entity = () => {
                                 className="edit-icon"
                               />
                             </span>
-                            <DeleteEntity user={user} handleDelete={handleDelete} />
+                            <DeleteEntity
+                              user={user}
+                              handleDelete={handleDelete}
+                            />
                           </>
                         )}
                       </div>
