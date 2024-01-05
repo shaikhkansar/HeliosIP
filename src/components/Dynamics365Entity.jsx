@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useReducer } from "react";
 import { Edit, Link2 } from "react-feather";
-import EditEntity from "./EditEmployee";
-import DeleteEntity from "./DeleteEmployee";
+import EditEmployee from "./EditEmployee";
+import DeleteEmployee from "./DeleteEmployee";
 import AddEmployee from "./AddEmployee";
 
 const Dynamics365Entity = () => {
@@ -245,7 +245,7 @@ const Dynamics365Entity = () => {
                     <td>
                       <div className="edit-icons-container">
                         {editedUsers[user.EmployeesID]?.isEditing ? (
-                          <EditEntity
+                          <EditEmployee
                             user={user}
                             handleSave={handleSave}
                             handleCancel={handleCancel}
@@ -268,7 +268,7 @@ const Dynamics365Entity = () => {
                                 className="edit-icon"
                               />
                             </span>
-                            <DeleteEntity
+                            <DeleteEmployee
                               user={user}
                               handleDelete={handleDelete}
                             />
