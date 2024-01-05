@@ -81,7 +81,7 @@ class Tab extends React.Component {
            <MediaQuery maxWidth={280}>
            <h3>This is the side panel</h3>
            <a href="https://docs.microsoft.com/en-us/microsoftteams/platform/apps-in-teams-meetings/teams-apps-in-meetings">
-             Need more info, open this document in new tab or window.
+             Need more info, open this document in new tab or window
            </a>
          </MediaQuery>*/
         }

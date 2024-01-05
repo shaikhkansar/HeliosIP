@@ -25,7 +25,7 @@ const AddEmployee = ({ deleteSuccess, saveSuccess }) => {
     // Validate only characters (letters)
     if (name === "FirstName" || name === "LastName") {
       if (!/^[A-Za-z ]+$/.test(value)) {
-        return; // Do not update state if the input contains non-alphabetic characters
+        return; // Do not update state if the input contains non-alphabetic character
       }
     }
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useReducer } from "react";
 import { Edit, Link2 } from "react-feather";
-import EditEntity from "./EditEntity";
-import DeleteEntity from "./DeleteEntity";
+import EditEntity from "./EditEmployee";
+import DeleteEntity from "./DeleteEmployee";
 import AddEmployee from "./AddEmployee";
 
 const Dynamics365Entity = () => {
