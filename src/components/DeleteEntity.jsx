@@ -38,12 +38,12 @@ const DeleteEntity = ({ user, handleDelete }) => {
       />
 
       <Modal show={showModal} onHide={handleCloseModal} centered size="sm">
-        <Modal.Body style={{ maxHeight: "70px", overflowY: "auto" }}>
+        <Modal.Body style={{ maxHeight: "80px", overflowY: "auto"}}>
           Are you sure you want to delete the employee?
         </Modal.Body>
         <Modal.Footer>
           <span data-bs-toggle="tooltip" data-bs-placement="right" title="Cancel">
-            <XSquare onClick={handleCloseModal} color="red" cursor="pointer" />
+            <XSquare onClick={handleCloseModal} color="red" cursor="pointer" style={{marginTop:"4px"}} />
           </span>
           <span data-bs-toggle="tooltip" data-bs-placement="right" title="Delete">
             <Trash2
