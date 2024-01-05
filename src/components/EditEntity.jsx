@@ -7,9 +7,22 @@ const EditEntity = ({
   handleCancel,
   handleInputChange,
   editedUsers,
+  saveSuccess
 }) => {
   return (
     <>
+     {saveSuccess && (
+        <h6
+          style={{
+            color: "green",
+            marginTop: "10px",
+            marginLeft: "410px",
+            whiteSpace: "nowrap",
+          }}
+        >
+          Employee saved successfully!
+        </h6>
+      )}
       <div className="" data-bs-toggle="tooltip" data-bs-placement="top" title="Save">
         <Save
           size="20px"
