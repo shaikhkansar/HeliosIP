@@ -130,7 +130,7 @@ const AddEmployee = ({ deleteSuccess, saveSuccess, updateUsers, users }) => {
       )}
       {saveSuccess && (
         <div class="alert alert-success g-3 successpopup" id="success-alert">
-          <strong>Success! </strong> Employee updated successfully!
+          <strong>Success! </strong> Employee saved successfully!
         </div>
       )}
       <div className="main-container">

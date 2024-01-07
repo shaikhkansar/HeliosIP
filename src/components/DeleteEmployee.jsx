@@ -21,7 +21,8 @@ const DeleteEmployee = ({ user, handleDelete }) => {
 
   return (
     <>
-    {/*  */}
+   
+   
     <span className="" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete">
       <Trash2
         size="20px"
