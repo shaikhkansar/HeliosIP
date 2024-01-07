@@ -1,15 +1,6 @@
 import React, { useState, useEffect } from "react";
-import AddEmployee from "./AddEmployee";
 import Dynamics365Entity from "./Dynamics365Entity";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-} from "@mui/material";
+
 
 const MeetingSummary = ({ chatid }) => {
   const [employees, setEmployees] = useState(null);
@@ -24,7 +15,7 @@ const MeetingSummary = ({ chatid }) => {
         const modifiedEncodedData = encodeddata.replace(/%3A/g, "%3a");
 
         const response = await fetch(
-          "https://prod-03.centralindia.logic.azure.com:443/workflows/d3ee0df170f442c28f9d0aad00decdaf/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=TUxwXjMdAxOzXQKSNCBM80V4S4qEL9Mu7BlDKgBwe00",
+          "https://prod-15.centralindia.logic.azure.com:443/workflows/fd3f528c9f88433b977e6960e0dc8598/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Xxg59PfxEETyPe1QjihDrmTdTmHXhhfV70oyTlPch1c",
           {
             method: "POST",
             headers: {
@@ -61,7 +52,6 @@ const MeetingSummary = ({ chatid }) => {
     fetchData();
 
     return () => {
-      // Cleanup function to cancel any pending operations
       isMounted = false;
     };
   }, [chatid]);
@@ -74,7 +64,7 @@ const MeetingSummary = ({ chatid }) => {
       ) : employees ? (
         <>
           <Dynamics365Entity />
-          <h6
+          <h6 className="heading"
             style={{ marginLeft: "350px", marginTop: "20px", width: "520px" }}
           >
             This is Schedule to discuss for following item.
@@ -107,10 +97,7 @@ const MeetingSummary = ({ chatid }) => {
           </div>
         </>
       ) : (
-        // <p style={{ marginLeft: "80px", color: "black", fontSize: "16px" }}>
-        //   Loading...
-        // </p>
-        <div class="spinner-border text-primary" role="status">
+       <div class="spinner-border text-primary spinner" role="status">
           <span class="visually-hidden">Loading...</span>
         </div>
       )}

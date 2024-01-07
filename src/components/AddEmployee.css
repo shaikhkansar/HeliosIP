@@ -1,31 +1,28 @@
 .main-container {
-    margin-left: 350px;
-    margin-top: 20px;
-  }
-  
-  .modal-dialog {
-    margin-left: 500px;
-    margin-top: 10px;
-  }
-  
-  .row {
-    margin-left:405px;
-    margin-right: -385px;
+  margin-left: 350px;
+  margin-top: 20px;
+}
 
-  }
+.modal-dialog {
+  margin-left: 500px;
+  margin-top: 10px;
+}
 
-  .btn {
-    background-color: #5b5fc7;
-    transition: background-color 0.3s ease; /* Optional: Add a smooth transition effect */
-  }
-  
-  .btn:hover {
-    background-color: #5b5fc7; /* Replace 'yourHoverColor' with the desired hover color */
-  }
+.row {
+  margin-left: 405px;
+  margin-right: -385px;
+}
 
-  .text-success{
-    margin-left: 410px;
-  }
+.btn {
+  background-color: #5b5fc7 !important;
+  transition: background-color 0.3s ease; 
+}
 
-  
-  
+.text-success {
+  margin-left: 410px;
+}
+
+.successpopup {
+  width: 58%;
+  margin-left: 350px !important;
+}
