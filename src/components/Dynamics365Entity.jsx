@@ -268,7 +268,6 @@ const Dynamics365Entity = () => {
               data-bs-placement="top"
               title="Click to go to the Employee Details"
             >
-              {/* Replace Link2 with the appropriate component */}
               {/* Assuming Link2 is a custom component */}
               <Link2
                 size="22px"

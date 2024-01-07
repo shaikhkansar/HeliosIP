@@ -16,7 +16,7 @@ class Tab extends React.Component {
       },
     };
   }
-
+// 
   componentDidMount() {
     app.initialize().then(() => {
       app.notifySuccess();

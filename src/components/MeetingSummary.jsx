@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Dynamics365Entity from "./Dynamics365Entity";
 
-
 const MeetingSummary = ({ chatid }) => {
   const [employees, setEmployees] = useState(null);
   const [error, setError] = useState(null);
