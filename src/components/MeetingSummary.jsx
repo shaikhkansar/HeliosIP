@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Dynamics365Entity from "./Dynamics365Entity";
 
-
-const MeetingSummary = ({ chatid }) => {
+const MeetingSummary = ({ chatid,selectedEmployeeID }) => {
   const [employees, setEmployees] = useState(null);
   const [error, setError] = useState(null);
 
@@ -64,7 +63,8 @@ const MeetingSummary = ({ chatid }) => {
       ) : employees ? (
         <>
           <Dynamics365Entity />
-          <h6 className="heading"
+          <h6
+            className="heading"
             style={{ marginLeft: "350px", marginTop: "20px", width: "520px" }}
           >
             This is Schedule to discuss for following item.
@@ -72,32 +72,46 @@ const MeetingSummary = ({ chatid }) => {
           <div
             style={{ marginLeft: "350px", marginTop: "20px", width: "520px" }}
           >
+             {employees !== null ? (
+          employees.length > 0 ? (
             <table className="table table-bordered table-striped">
               <tbody>
                 <tr style={{ border: "1px solid lightgray" }}>
-                  <th scope="col">Employee ID</th>
-                  {employees.map((employee) => (
-                    <td key={employee.EmployeeID}>{employee.EmployeeID}</td>
+                  {Object.keys(employees[0]).map((property) => (
+                    <th scope="col" key={property}>
+                      {property}
+                    </th>
                   ))}
                 </tr>
-                <tr>
-                  <th scope="col">First Name</th>
-                  {employees.map((employee) => (
-                    <td key={employee.EmployeeID}>{employee.FirstName}</td>
-                  ))}
-                </tr>
-                <tr style={{ border: "1px solid lightgray" }}>
-                  <th scope="col">Last Name</th>
-                  {employees.map((employee) => (
-                    <td key={employee.EmployeeID}>{employee.LastName}</td>
-                  ))}
-                </tr>
+                {employees.map((employee) => (
+                  <tr
+                    key={employee.EmployeeID}
+                    style={{
+                      backgroundColor:
+                        employee.EmployeeID === selectedEmployeeID
+                          ? "yellow" // Highlight color
+                          : "transparent",
+                    }}
+                  >
+                    {Object.values(employee).map((value, index) => (
+                      <td key={index}>{value}</td>
+                    ))}
+                  </tr>
+                ))}
               </tbody>
             </table>
+          ) : (
+            <p>No employees data available</p>
+          )
+        ) : (
+          <div class="spinner-border text-primary spinner" role="status">
+            <span class="visually-hidden">Loading...</span>
           </div>
+        )}
+      </div>
         </>
       ) : (
-       <div class="spinner-border text-primary spinner" role="status">
+        <div class="spinner-border text-primary spinner" role="status">
           <span class="visually-hidden">Loading...</span>
         </div>
       )}

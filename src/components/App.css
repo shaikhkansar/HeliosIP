@@ -39,10 +39,21 @@ body {
 
 .search-icon {
   position: absolute;
-  top: 8%;
-  right: 10px; /* Adjust the positioning as needed */
-  transform: translateY(-50%);
+  left: 630px; 
+  padding: 8px; 
+  border-radius: 50%;
   color: lightgray;
+}
+
+.search-input {
+  margin-left: 155px;
+  margin-top: 30px;
+  width: 515px;
+}
+
+.handle-search {
+  display: flex;
+  align-items: center;
 }
 
 .form-control {
@@ -50,12 +61,6 @@ body {
   background-size: 20px; /* Adjust the size of the icon */
   background-repeat: no-repeat;
   background-position: right 10px center; /* Adjust the position of the icon within the input */
-}
-
-.search-input {
-  margin-left: 155px;
-  margin-top: 30px;
-  width: 525px;
 }
 
 .results-container {
@@ -103,20 +108,32 @@ body {
   margin-right: 25px;
   margin-top: 2px;
 }
+/* .edit-input {
+  width: 97px;
+} */
 
 .delete-icon {
   margin-top: 2px;
 }
 
-.handle-search {
-  display: flex;
-  align-items: center;
+.spinner {
+  margin-top: 260px;
 }
 
+.invalid-feedback {
+    font-size: 13px;
+    margin-left: 1px;
+ }
+
 @media only screen and (max-width: 600px) {
-  .spinner{
+
+  body {
+    overflow-x: hidden;
+    overflow-y: hidden;
+  }
+  .spinner {
     margin-left: 55px !important;
-    margin-top: 30px;
+    margin-top: 220px;
   }
   .form-control {
     display: block;
@@ -139,18 +156,19 @@ body {
     margin-right: 17px !important;
   }
   .search-control {
-    width: 45% !important;
+    width: 49% !important;
+    margin-left: -9px;
   }
   .search-icon {
     position: absolute;
-    top: 6%;
+    top: 7%;
     right: 43%; /* Adjust the positioning as needed */
     transform: translateY(-50%);
     color: lightgray;
-    
   }
   .form-control2 {
-    width: 235px !important;
+    width: 252px !important;
+    margin-left: -9px 
   }
   .btn {
     margin-top: 10px !important;
@@ -158,10 +176,11 @@ body {
     height: 31px;
   }
 
-  img, svg {
+  img,
+  svg {
     vertical-align: middle;
     margin-top: -3px;
-}
+  }
   .table {
     width: 238px !important;
     font-size: 11px;
@@ -170,8 +189,8 @@ body {
     font-size: 11px !important;
   }
   .results-container {
-    width: 525px !important;
-    margin-left: 65px !important;
+    width: 350px !important;
+    margin-left: 56px !important;
   }
   .sticky-header {
     font-size: 10px !important;
@@ -186,70 +205,85 @@ body {
     font-size: 11px;
     width: 223px !important;
     margin-left: 10px;
-    }
-   
-    .table-container {
-      /* Add your styles for small screens here */
-      overflow-x: auto;
-      margin-left: 92px;
-    }
-  
-    .table-container th,
-    .table-container td {
-      /* Add your styles for table headers and cells on small screens here */
-      white-space: nowrap;
-      font-size: 12px;
-    padding: 4px;
-    }
+  }
 
-    /* link */
-    img, svg { 
-      vertical-align: middle;
-      margin-top: -3px;
-      height: 15px;
-      margin-left: -10px;
+  .table-container {
+    /* Add your styles for small screens here */
+    overflow-x: auto;
+    margin-left: 92px;
+  }
+
+  .table-container th,
+  .table-container td {
+    /* Add your styles for table headers and cells on small screens here */
+    white-space: nowrap;
+    font-size: 12px;
+    padding: 4px;
+  }
+
+  /* link */
+  img,
+  svg {
+    vertical-align: middle;
+    margin-bottom: 7px;
+    height: 15px;
+    margin-left: -10px;
   }
 
   .edit-icon {
     margin-right: 9px !important;
-    margin-left: -51px;
-    height: 13px;
-}
+    margin-right: 50px !important;
+    height: 15px;
+  }
 
-.delete-icon {
-  margin-top: 2px;
-  margin-left: -31px;
-  height: 13px;
-}
-.modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1040;
-  width: 98vw;
-  height: 100vh;
-  background-color: #000;
-  margin: 0px;
-}
-.modal-content {
-  position: relative;
-  top: 66px;
-  display: flex;
-  flex-direction: column;
-  width: 250px;
-  pointer-events: auto;
-  background-color: #fff;
-  background-clip: padding-box;
-  border: 1px solid rgba(0,0,0,.2);
-  border-radius: 0.3rem;
-  outline: -1;
-  margin-left: -495px;
-  font-size: 10px;
-}
-img, svg {
-  vertical-align: middle;
-  margin-top: 4px;
-  height: 15px;
-  margin-left: -2px;
-}
+  .delete-icon {
+    margin-top: 2px;
+    margin-left: -29px;
+    height: 15px;
+  }
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1040;
+    width: 98vw;
+    height: 100vh;
+    background-color: #000;
+    margin: 0px;
+  }
+  .modal-content {
+    position: relative;
+    top: 66px;
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 0.3rem;
+    outline: -1;
+    margin-left: -495px;
+    font-size: 10px;
+  }
+  .search-icon{
+   margin-left: -16rem;
+   margin-top: 1px;
+  }
+  .invalid-feedback {
+    font-size: 11px;
+  }
+
+  .table>:not(caption)>*>* {
+    font-size: 13px;
+   
+  }
+  .table-striped{
+    margin-left: -2%;
+  }
+
+  .heading{
+    font-size: 12px!important;
+  }
+
 }

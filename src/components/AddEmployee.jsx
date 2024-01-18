@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { UserPlus } from "react-feather";
 import "./AddEmployee.css";
 
-const AddEmployee = ({ deleteSuccess, saveSuccess, updateUsers, users }) => {
+const AddEmployee = ({ deleteSuccess, saveSuccess, updateUsers, users}) => {
   const [formData, setFormData] = useState({
     EmployeesID: "",
     FirstName: "",
@@ -16,28 +16,25 @@ const AddEmployee = ({ deleteSuccess, saveSuccess, updateUsers, users }) => {
   });
 
   const [isPopup, setIsPopup] = useState(false);
-  const [showDuplicatePopup, setShowDuplicatePopup] = useState(false);
+  const [isDuplicatePopup, setIsDuplicatePopup] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
+  
+    // Allow empty string for deletion
+    if (value === "") {
+      handleChange(e); // Update state even if empty
+      return;
+    }
+  
+    // Check for valid characters in names
     if (name === "FirstName" || name === "LastName") {
       if (!/^[A-Za-z ]+$/.test(value)) {
         return;
       }
     }
-
-    // Check for duplicate Employee ID
-    const isDuplicate =
-      users && users.some((user) => user.EmployeesID === value);
-
-    if (isDuplicate) {
-      // Show duplicate popup
-      setShowDuplicatePopup(true);
-      return;
-    }
-
-    handleChange(e); // Update state if validation passes
+  
+   handleChange(e); // Update state
   };
 
   const handleChange = (e) => {
@@ -75,9 +72,14 @@ const AddEmployee = ({ deleteSuccess, saveSuccess, updateUsers, users }) => {
       return;
     }
 
-    if (showDuplicatePopup) {
-      setShowDuplicatePopup(false);
-    }
+   // Check if user ID already exists
+   const userIdExists = users.some(user => user.EmployeesID === formData.EmployeesID);
+
+   if (userIdExists) {
+    setIsDuplicatePopup(true);
+     return; // Return without making the API call
+   }
+   
     try {
       const response = await fetch(
         "https://prod-21.centralindia.logic.azure.com:443/workflows/affd8cc9893948a2bae4cc4a65f9fa90/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=4asos1JGB9vBj-v1DqJeNsJE_rb_dZsQRJDg3VI_2Zw",
@@ -104,14 +106,18 @@ const AddEmployee = ({ deleteSuccess, saveSuccess, updateUsers, users }) => {
   };
 
   useEffect(() => {
-    if (isPopup) {
-      const timeout = setTimeout(() => {
-        setIsPopup(false);
-      }, 3000);
+  const clearPopup = () => {
+    setIsPopup(false);
+    setIsDuplicatePopup(false);
+  };
 
-      return () => clearTimeout(timeout);
-    }
-  }, [isPopup]);
+  if (isPopup || isDuplicatePopup) {
+    const timeout = setTimeout(clearPopup, 3000);
+
+    return () => clearTimeout(timeout);
+  }
+}, [isPopup, isDuplicatePopup]);
+
 
   return (
     <>
@@ -121,6 +127,14 @@ const AddEmployee = ({ deleteSuccess, saveSuccess, updateUsers, users }) => {
           id="success-alert"
         >
           <strong>Success! </strong> User added successfully!
+        </div>
+      )}
+       {isDuplicatePopup  && (
+        <div
+          className="alert alert-danger g-3 successpopup"
+          id="duplicate-alert"
+        >
+          <strong>Error: </strong> User ID already exists!
         </div>
       )}
       {deleteSuccess && (

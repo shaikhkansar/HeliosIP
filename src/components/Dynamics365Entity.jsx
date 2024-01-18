@@ -3,8 +3,8 @@ import { Edit, Link2, Search } from "react-feather";
 import EditEntity from "./EditEmployee";
 import DeleteEntity from "./DeleteEmployee";
 import AddEmployee from "./AddEmployee";
-import { Table, Thead, Tbody, Tr, Th, Td } from 'react-super-responsive-table';
-import 'react-super-responsive-table/dist/SuperResponsiveTableStyle.css';
+import { Table, Thead, Tbody, Tr, Th, Td } from "react-super-responsive-table";
+import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
 
 const Dynamics365Entity = () => {
   const [error, setError] = useState(null);
@@ -22,6 +22,7 @@ const Dynamics365Entity = () => {
     FirstName: "",
     LastName: "",
   });
+  
   const [forceRender, setForceRender] = useState(0);
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
@@ -42,28 +43,10 @@ const Dynamics365Entity = () => {
   };
 
   const handleAdd = () => {
-    // Check if the EmployeesID already exists
-    const isDuplicate = users.some((user) => user.EmployeesID === formData.EmployeesID);
-  
-    if (isDuplicate) {
-      
-      return;
-    }
-  
-    // Add employees in sequence
-    const nextEmployeesID = users.length > 0 ? users[users.length - 1].EmployeesID + 1 : 1;
-  
-    const newUser = {
-      ...formData,
-      EmployeesID: formData.EmployeesID || nextEmployeesID,
-      ItemLink: formData.ItemLink || ""
-    };
-  
-    setUsers([...users, newUser]);
-    setEditedUsers({});
+    const newUser = { ...formData, ItemLink: formData.ItemLink || "" };
+    setUsers((prevUsers) => [...prevUsers, newUser]); // Use a functional update to ensure consistency
     setFormData({ EmployeesID: "", FirstName: "", LastName: "", ItemLink: "" });
   };
-  
 
   const handleEdit = (user) => {
     setEditedUsers((prevEditedUsers) => ({
@@ -179,27 +162,27 @@ const Dynamics365Entity = () => {
   }, [editedUsers, users]);
 
   const filteredUsers = Array.isArray(users)
-  ? users.filter((user) => {
-      const searchString = [
-        String(user.EmployeesID),
-        user.FirstName,
-        user.LastName,
-        user.ItemLink,
-      ]
-        .join(" ")
-        .toLowerCase();
+    ? users.filter((user) => {
+        const searchString = [
+          String(user.EmployeesID),
+          user.FirstName,
+          user.LastName,
+          user.ItemLink,
+        ]
+          .join(" ")
+          .toLowerCase();
 
-      const searchQueryLower = searchQuery.toLowerCase();
+        const searchQueryLower = searchQuery.toLowerCase();
 
-      if (searchQuery.length === 1 && /^\d$/.test(searchQueryLower)) {
-        // If the search query is a single digit, allow searching for a single-digit Employee ID
-        return String(user.EmployeesID).includes(searchQueryLower);
-      }
+        if (searchQuery.length === 1 && /^\d$/.test(searchQueryLower)) {
+          // If the search query is a single digit, allow searching for a single-digit Employee ID
+          return String(user.EmployeesID).includes(searchQueryLower);
+        }
 
-      // Otherwise, perform the standard search
-      return searchString.includes(searchQueryLower);
-    })
-  : [];
+        // Otherwise, perform the standard search
+        return searchString.includes(searchQueryLower);
+      })
+    : [];
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -208,7 +191,12 @@ const Dynamics365Entity = () => {
   } else {
     return (
       <>
-        <AddEmployee deleteSuccess={deleteSuccess} saveSuccess={saveSuccess}  updateUsers={updateUsers} users={users}/>
+        <AddEmployee
+          deleteSuccess={deleteSuccess}
+          saveSuccess={saveSuccess}
+          updateUsers={updateUsers}
+          users={users}
+        />
         <div className="search-container">
           <div className="search-input">
             <div className="handle-search">
@@ -222,102 +210,106 @@ const Dynamics365Entity = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
+              
             </div>
           </div>
           <div className="results-container">
-          <Table className="table table-hover table-container">
-  <Thead>
-    <Tr className="sticky-header">
-      <Th>Emp.id</Th>
-      <Th>First Name</Th>
-      <Th>Last Name</Th>
-      <Th>Item Link</Th>
-      <Th>Actions</Th>
-    </Tr>
-  </Thead>
-  <Tbody>
-    {filteredUsers.map((user) => (
-      <Tr key={user.EmployeesID} className="user-td">
-        {["EmployeesID", "FirstName", "LastName"].map((field) => (
-          <Td key={field}>
-            {editedUsers[user.EmployeesID]?.isEditing ? (
-              <input
-                placeholder={field === "EmployeesID" ? "Emp-id" : field}
-                className="form-control edit-input"
-                type="text"
-                value={
-                  editedUsers[user.EmployeesID]?.[field] || user[field]
-                }
-                onChange={(event) =>
-                  handleInputChange(event, user.EmployeesID, field)
-                }
-                style={{
-                  marginLeft: "-2px",
-                }}
-              />
-            ) : (
-              editedUsers[user.EmployeesID]?.[field] || user[field]
-            )}
-          </Td>
-        ))}
-        {/* Adjust the column for Item Link based on your requirements */}
-        <Td>
-          <div className="link2-container">
-            <span
-              data-bs-toggle="tooltip"
-              data-bs-placement="top"
-              title="Click to go to the Employee Details"
-            >
-              {/* Replace Link2 with the appropriate component */}
-              {/* Assuming Link2 is a custom component */}
-              <Link2
-                size="22px"
-                color="#5b5fc7"
-                onClick={() =>
-                  window.open(`${user.ItemLink}`, "_blank")
-                }
-              />
-            </span>
-          </div>
-        </Td>
-        <Td>
-          <div className="edit-icons-container">
-            {editedUsers[user.EmployeesID]?.isEditing ? (
-              <EditEntity
-                user={user}
-                handleSave={handleSave}
-                handleCancel={handleCancel}
-                handleInputChange={handleInputChange}
-                editedUsers={editedUsers}
-              />
-            ) : (
-              <>
-                <span
-                  className=""
-                  data-bs-toggle="tooltip"
-                  data-bs-placement="top"
-                  title="Edit"
-                >
-                  <Edit
-                    size="20px"
-                    cursor="pointer"
-                    color="#5b5fc7"
-                    onClick={() => handleEdit(user)}
-                    className="edit-icon"
-                  />
-                </span>
-                <DeleteEntity
-                  user={user}
-                  handleDelete={handleDelete}
-                />
-              </>
-            )}
-          </div>
-        </Td>
-      </Tr>
-    ))}
-  </Tbody>
-</Table>
+            <Table className="table table-hover table-container">
+              <Thead>
+                <Tr className="sticky-header">
+                  <Th>Emp.id</Th>
+                  <Th>First Name</Th>
+                  <Th>Last Name</Th>
+                  <Th>Item Link</Th>
+                  <Th>Actions</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {filteredUsers.map((user) => (
+                  <Tr key={user.EmployeesID} className="user-td">
+                    {["EmployeesID", "FirstName", "LastName"].map((field) => (
+                      <Td key={field}>
+                        {editedUsers[user.EmployeesID]?.isEditing ? (
+                          <input
+                            placeholder={
+                              field === "EmployeesID" ? "Emp-id" : field
+                            }
+                            className="form-control edit-input"
+                            type="text"
+                            value={
+                              editedUsers[user.EmployeesID]?.[field] ||
+                              user[field]
+                            }
+                            onChange={(event) =>
+                              handleInputChange(event, user.EmployeesID, field)
+                            }
+                            style={{
+                              marginLeft: "-2px",
+                            }}
+                          />
+                        ) : (
+                          editedUsers[user.EmployeesID]?.[field] || user[field]
+                        )}
+                      </Td>
+                    ))}
+                    {/* Adjust the column for Item Link based on your requirements */}
+                    <Td>
+                      <div className="link2-container">
+                        <span
+                          data-bs-toggle="tooltip"
+                          data-bs-placement="top"
+                          title="Click to go to the Employee Details"
+                        >
+                          {/* Replace Link2 with the appropriate component */}
+                          {/* Assuming Link2 is a custom component */}
+                          <Link2
+                            size="22px"
+                            color="#5b5fc7"
+                            onClick={() =>
+                              window.open(`${user.ItemLink}`, "_blank")
+                            }
+                          />
+                        </span>
+                      </div>
+                    </Td>
+                    <Td>
+                      <div className="edit-icons-container">
+                        {editedUsers[user.EmployeesID]?.isEditing ? (
+                          <EditEntity
+                            user={user}
+                            handleSave={handleSave}
+                            handleCancel={handleCancel}
+                            handleInputChange={handleInputChange}
+                            editedUsers={editedUsers}
+                          />
+                        ) : (
+                          <>
+                            <span
+                              className=""
+                              data-bs-toggle="tooltip"
+                              data-bs-placement="top"
+                              title="Edit"
+                            >
+                              <Edit
+                                size="20px"
+                                cursor="pointer"
+                                color="#5b5fc7"
+                                onClick={() => handleEdit(user)}
+                                className="edit-icon"
+                              />
+                            </span>
+                            <DeleteEntity
+                              user={user}
+                              handleDelete={handleDelete}
+                            />
+                          </>
+                        )}
+                      </div>
+                    </Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
           </div>
         </div>
       </>
