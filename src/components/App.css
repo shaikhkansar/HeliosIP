@@ -129,7 +129,7 @@ body {
 
   body {
     overflow-x: hidden;
-    overflow-y: hidden;
+    /* overflow-y: hidden; */
   }
   .spinner {
     margin-left: 55px !important;
@@ -285,5 +285,4 @@ body {
   .heading{
     font-size: 12px!important;
   }
-
-}
+ }

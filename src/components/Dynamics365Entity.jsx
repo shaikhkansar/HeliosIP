@@ -22,7 +22,6 @@ const Dynamics365Entity = () => {
     FirstName: "",
     LastName: "",
   });
-  
   const [forceRender, setForceRender] = useState(0);
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
