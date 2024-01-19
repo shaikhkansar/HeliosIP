@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Dynamics365Entity from "./Dynamics365Entity";
+import MasterData from "./MasterData";
 
-const MeetingSummary = ({ chatid,selectedEmployeeID }) => {
+const MeetingSummary = ({ chatid }) => {
   const [employees, setEmployees] = useState(null);
   const [error, setError] = useState(null);
 
@@ -72,27 +73,17 @@ const MeetingSummary = ({ chatid,selectedEmployeeID }) => {
           <div
             style={{ marginLeft: "350px", marginTop: "20px", width: "520px" }}
           >
-             {employees !== null ? (
-          employees.length > 0 ? (
-            <table className="table table-bordered table-striped">
+            <table  className="table table-bordered table-striped">
               <tbody>
-                <tr style={{ border: "1px solid lightgray" }}>
+                <tr  style={{ border: "1px solid lightgray" }}>
                   {Object.keys(employees[0]).map((property) => (
-                    <th scope="col" key={property}>
+                    <th scope="col" key={property} >
                       {property}
                     </th>
                   ))}
                 </tr>
                 {employees.map((employee) => (
-                  <tr
-                    key={employee.EmployeeID}
-                    style={{
-                      backgroundColor:
-                        employee.EmployeeID === selectedEmployeeID
-                          ? "yellow" // Highlight color
-                          : "transparent",
-                    }}
-                  >
+                  <tr key={employee.EmployeeID}>
                     {Object.values(employee).map((value, index) => (
                       <td key={index}>{value}</td>
                     ))}
@@ -100,15 +91,8 @@ const MeetingSummary = ({ chatid,selectedEmployeeID }) => {
                 ))}
               </tbody>
             </table>
-          ) : (
-            <p>No employees data available</p>
-          )
-        ) : (
-          <div class="spinner-border text-primary spinner" role="status">
-            <span class="visually-hidden">Loading...</span>
+          <MasterData/>
           </div>
-        )}
-      </div>
         </>
       ) : (
         <div class="spinner-border text-primary spinner" role="status">
