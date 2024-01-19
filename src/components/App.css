@@ -276,8 +276,7 @@ body {
 
   .table>:not(caption)>*>* {
     font-size: 13px;
-   
-  }
+   }
   .table-striped{
     margin-left: -2%;
   }
